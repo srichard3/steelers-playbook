@@ -307,10 +307,17 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
   border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
   background:var(--raise);box-shadow:var(--shadow);
 }
+/* 16:9 via padding-ratio, NOT aspect-ratio.
+   aspect-ratio on a box that also holds absolutely-positioned children
+   resolves differently across engines -- it rendered fine in Chrome and
+   collapsed the whole card elsewhere. This technique is boring and works
+   everywhere. */
 .player-shot{
-  position:relative;aspect-ratio:16/9;background:var(--sink);overflow:hidden;
+  position:relative;width:100%;height:0;padding-top:56.25%;
+  background:var(--sink);overflow:hidden;
 }
 .player-shot img{
+  position:absolute;top:0;left:0;
   width:100%;height:100%;object-fit:cover;display:block;filter:var(--photo-filter);
 }
 .player-shot::after{
@@ -377,10 +384,14 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
    rhythm rather than adding to it. */
 .scene{display:flex;flex-direction:column;gap:.6rem;margin-block:.4rem}
 .scene-img{
-  position:relative;width:100%;overflow:hidden;background:var(--sink);
+  position:relative;width:100%;height:0;padding-top:var(--ratio,56.25%);
+  overflow:hidden;background:var(--sink);
   border:1px solid var(--line);border-radius:var(--r);
 }
-.scene-img img{width:100%;height:100%;object-fit:cover;display:block;filter:var(--photo-filter)}
+.scene-img img{
+  position:absolute;top:0;left:0;
+  width:100%;height:100%;object-fit:cover;display:block;filter:var(--photo-filter);
+}
 
 .scene-cap{font-size:.92rem;color:var(--ink-2);line-height:1.5;max-width:62ch}
 .scene-cap b{color:var(--ink);font-weight:600}
@@ -1623,7 +1634,9 @@ function el(tag, cls, html){
     if(!s){ slot.remove(); return; }
     var fig = el('figure','scene');
     var box = el('div','scene-img');
-    box.style.aspectRatio = s.aspect || '16/9';
+    var ar = (s.aspect || '16/9').split('/');
+    var pct = (parseFloat(ar[1]) / parseFloat(ar[0]) * 100);
+    box.style.setProperty('--ratio', (isFinite(pct) ? pct : 56.25) + '%');
     if(pix[s.slug]){
       var img = new Image();
       img.src = pix[s.slug];
