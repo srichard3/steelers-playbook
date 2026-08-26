@@ -378,6 +378,122 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
   .player-life .inset{width:88px;height:88px}
 }
 
+/* ================= CONTACT SHEET =================
+   Fourteen faces in ~2 phone screens instead of fourteen. Tapping one
+   expands it in place: the item spans the full grid row, so the detail
+   always appears next to the face you tapped rather than miles away.
+   No aspect-ratio anywhere -- padding-ratio only (see player-shot). */
+.sheet{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}
+@media(min-width:720px){.sheet{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1040px){.sheet{grid-template-columns:repeat(4,1fr)}}
+.sheet-item{min-width:0}
+.sheet-item.open{grid-column:1/-1}
+
+.sheet-tile{
+  display:block;width:100%;padding:0;text-align:left;
+  background:var(--raise);border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;transition:border-color .15s,transform .15s;
+}
+.sheet-tile:hover{border-color:var(--gold-lit);transform:translateY(-2px)}
+.sheet-item.open .sheet-tile{border-color:var(--gold-lit);border-bottom-left-radius:0;border-bottom-right-radius:0}
+.sheet-shot{
+  position:relative;display:block;width:100%;height:0;padding-top:66%;
+  background:var(--sink);overflow:hidden;
+}
+.sheet-item.open .sheet-shot{padding-top:38%}
+.sheet-shot img{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;display:block;filter:var(--photo-filter);
+}
+.sheet-shot::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,var(--scrim) 0%,transparent 58%);
+}
+.sheet-tag{
+  position:absolute;left:.6rem;right:.6rem;bottom:.5rem;z-index:1;
+  display:flex;align-items:baseline;gap:.4rem;flex-wrap:wrap;
+}
+.sheet-no{
+  font-family:var(--display);font-size:1.5rem;line-height:.9;color:var(--gold-lit);
+  text-shadow:0 2px 10px rgba(0,0,0,.8);
+}
+.sheet-nm{
+  font-family:var(--display);text-transform:uppercase;font-size:.95rem;line-height:1;
+  color:#FFF;letter-spacing:.02em;text-shadow:0 2px 10px rgba(0,0,0,.9);
+}
+.sheet-pos{
+  display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);padding:.5rem .65rem;
+}
+/* [hidden] sets display:none in the UA sheet, but a class with display:flex
+   out-specifies it and the panel renders anyway. Every collapsed detail was
+   still taking full height. Restore it explicitly. */
+.sheet-detail[hidden]{display:none}
+.sheet-detail{
+  border:1px solid var(--gold-lit);border-top:0;
+  border-radius:0 0 var(--r) var(--r);background:var(--raise);
+  padding:1rem 1.15rem 1.15rem;display:flex;flex-direction:column;gap:.8rem;
+}
+
+/* ================= THE SPOTTER =================
+   Cue -> pick a face -> the number is the ANSWER, never the prompt. */
+.sp-cue{
+  font-size:clamp(1.02rem,2.2vw,1.2rem);line-height:1.5;color:var(--ink);
+  max-width:52ch;margin-bottom:1rem;
+}
+.sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.sp-opt{
+  position:relative;display:block;width:100%;padding:0;
+  background:var(--sink);border:2px solid var(--line);border-radius:var(--r);
+  overflow:hidden;transition:border-color .15s,opacity .2s,transform .12s;
+}
+.sp-opt:hover:not(:disabled){border-color:var(--gold-lit)}
+.sp-opt:active:not(:disabled){transform:scale(.98)}
+.sp-face{
+  position:relative;display:block;width:100%;height:0;padding-top:72%;overflow:hidden;
+}
+.sp-face img{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;display:block;filter:var(--photo-filter);
+}
+.sp-opt.right{border-color:var(--turf)}
+.sp-opt.wrong{border-color:var(--ore-lit)}
+.sp-opt.dim{opacity:.32}
+.sp-opt:disabled{cursor:default}
+.sp-name{
+  position:absolute;left:0;right:0;bottom:0;z-index:1;
+  padding:.9rem .6rem .45rem;
+  background:linear-gradient(to top,rgba(0,0,0,.85),transparent);
+  font-family:var(--display);text-transform:uppercase;font-size:.9rem;
+  color:#FFF;letter-spacing:.02em;text-align:center;
+}
+
+.sp-reveal{
+  margin-top:1rem;border-left:3px solid var(--gold-lit);
+  padding:.2rem 0 .2rem 1rem;display:flex;flex-direction:column;gap:.7rem;
+}
+.sp-verdict{font-size:1rem;color:var(--ink)}
+.sp-verdict b{color:var(--gold-ink)}
+.sp-who{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap}
+.sp-big{
+  font-family:var(--display);font-size:2.6rem;line-height:.9;color:var(--gold-ink);
+  font-variant-numeric:tabular-nums;
+}
+.sp-whotxt{display:flex;flex-direction:column;gap:.1rem;min-width:0}
+.sp-whotxt .n{font-family:var(--display);text-transform:uppercase;font-size:1.25rem;letter-spacing:.02em;line-height:1}
+.sp-whotxt .p{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.sp-life{display:flex;gap:.85rem;align-items:flex-start}
+.sp-life .thumb{
+  position:relative;flex:none;width:76px;height:76px;border-radius:8px;
+  overflow:hidden;background:var(--sink);border:1px solid var(--line);
+}
+.sp-life .thumb img{width:100%;height:100%;object-fit:cover;display:block;filter:var(--photo-filter)}
+.sp-life p{font-size:.9rem;color:var(--ink-2);line-height:1.5}
+.sp-done{
+  font-size:1rem;color:var(--ink);border-left:3px solid var(--gold-lit);
+  padding-left:1rem;margin-top:1rem;
+}
+
 /* ================= SCENE PHOTOS =================
    The non-player images placed through the chapters. Square-cornered
    and edge-to-edge inside the wrap, so they break the rounded-box
@@ -1136,12 +1252,35 @@ footer p{font-size:.88rem;color:var(--ink-3)}
     </div>
 
     <h3>The team she's about to watch</h3>
-    <p style="color:var(--ink-2);max-width:58ch">These are the names you'll hear
-      this season, every week. Each one gets the man on the field and the man off
-      it &mdash; because the second photo is the one that makes the name stick.
-      Don't try to memorise them; just read them once, and they'll start
-      attaching themselves to faces by about week three.</p>
-    <div class="players" id="players"></div>
+    <p style="color:var(--ink-2);max-width:58ch">Fourteen faces. <strong>Do not try
+      to memorise them.</strong> Tap any one you're curious about, read it, close it
+      again &mdash; then play the game underneath, which is where they actually
+      stick.</p>
+    <div class="sheet" id="players"></div>
+
+    <figure style="margin-top:2rem">
+      <h3>Right. Let's see if they stuck.</h3>
+      <p style="color:var(--ink-2);font-size:.95rem;max-width:58ch">This is the
+        thing a broadcast actually asks of you: something happens, and you work out
+        who that was. Ten of them. It gets harder on purpose.</p>
+      <div class="lab" style="margin-top:.9rem">
+        <div class="lab-head">
+          <span class="ttl">The Spotter</span>
+          <span class="hint" id="spCount"></span>
+        </div>
+        <div class="lab-body">
+          <p class="sp-cue" id="spCue"></p>
+          <div class="sp-grid" id="spOpts"></div>
+          <div id="spReveal"></div>
+          <div class="qfoot">
+            <div class="prog"><i id="spBar"></i></div>
+            <span class="qscore" id="spScore">0 right</span>
+            <button class="btn on" id="spNext" hidden>Next one</button>
+            <button class="btn" id="spAgain" hidden>Play again</button>
+          </div>
+        </div>
+      </div>
+    </figure>
 
     <h3 style="margin-top:1.4rem">Three names from before, and that's all for now</h3>
     <p style="color:var(--ink-2);max-width:58ch">There is a great deal of history
@@ -1388,7 +1527,7 @@ footer p{font-size:.88rem;color:var(--ink-3)}
 </footer>
 
 <script>
-window.__PLAYERS = [{"slug": "mike-mccarthy", "tier": "now", "name": "Mike McCarthy", "number": null, "position": "HC", "positionLong": "Head Coach", "years": "2026 - present", "football": "The new head coach. He won a Super Bowl in Green Bay and spent fifteen years there before Dallas, and he arrives with a reputation for building offenses and for being unglamorously good at the job. This is his first season in Pittsburgh, so nobody knows how it goes yet -- you are finding out at exactly the same time as everyone else.", "life": "He is from here. He grew up in Greenfield, about four miles from the stadium, and worked in his father's bar on Saw Mill Run Boulevard as a kid. He went from pouring drinks for Steelers fans to running the team those people live and die for. If that does not get you, nothing will.", "footballCaption": "On the sideline", "lifeCaption": "Greenfield kid, come home", "why": "A hometown kid came home to run the whole thing. Watch how the city treats him.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "The one in the headset with the laminated play sheet, chewing gum, arms folded."}, {"slug": "aaron-rodgers", "tier": "now", "name": "Aaron Rodgers", "number": 8, "position": "QB", "positionLong": "Quarterback", "years": "2026 - present", "football": "The quarterback, and one of the greatest to ever play the position: four MVP awards and a Super Bowl ring. He is in his forties now, at the very end of a long career, and this is almost certainly his last real shot at another championship. Every throw he makes this year is a man running out of road.", "life": "Famously his own person -- reads a lot, says exactly what he thinks, and has spent twenty years being the most discussed man in any room. You will hear opinions about him from people who have never watched a full game.", "footballCaption": "Under center", "lifeCaption": "Never short of opinions", "why": "If one name comes up at a party this season, it is his. Learning to spot number 8 gets you into any conversation.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 8. Before every snap he is the one pointing, shouting, moving people around -- nobody else does that much talking."}, {"slug": "dk-metcalf", "tier": "now", "name": "DK Metcalf", "number": 4, "position": "WR", "positionLong": "Wide Receiver", "years": "2025 - present", "football": "The deep threat. When Pittsburgh takes a shot down the field, it is usually going to him. He is enormous and genuinely one of the fastest men in the league at that size, which should not be possible and is the entire point of him.", "life": "He once entered a real track meet and ran the 100 metres against actual professional sprinters, purely because he wanted to know how he would do. He did not win. He was completely unbothered. That is the whole personality.", "footballCaption": "The deep threat", "lifeCaption": "The track meet", "why": "The easiest player on the entire roster to recognise. Start with him.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 4, and honestly you will not need it. He is 6'4\" and built like a comic book character -- the most physically startling man on the field."}, {"slug": "michael-pittman", "tier": "now", "name": "Michael Pittman Jr.", "number": 11, "position": "WR", "positionLong": "Wide Receiver", "years": "2026 - present", "football": "Traded to Pittsburgh this year and immediately a primary target. He is not the one who outruns people -- he is the one who goes up in a crowd of defenders and comes down with it anyway. When the offense needs a first down on third and seven, he is a common answer.", "life": "His father, Michael Pittman Sr., was a Super Bowl-winning running back. So he grew up inside NFL locker rooms and has never once looked intimidated by any of this -- it is simply the family business.", "footballCaption": "Contested catches", "lifeCaption": "Second generation", "why": "One of the two names you will hear most on offense. Second generation, and it shows.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 11. Big, square-shouldered, and the one who comes down with the ball in a crowd."}, {"slug": "germie-bernard", "tier": "now", "name": "Germie Bernard", "number": 17, "position": "WR", "positionLong": "Wide Receiver", "years": "2026 - present", "football": "A rookie -- Pittsburgh drafted him this year out of Washington, and he is still learning what the NFL is. Quick, and the one more likely to be running deep down the sideline. Some weeks he will look like the future and some weeks he will look twenty-two years old.", "life": "This is his first season as a professional. He will make mistakes on national television in front of sixty-five thousand people, and how he handles that is the story worth watching.", "footballCaption": "Down the sideline", "lifeCaption": "Off the field", "why": "Learn him now and you get to say you knew him first. That is genuinely fun over a career.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 17. The youngest-looking one out there, because he is."}, {"slug": "rico-dowdle", "tier": "now", "name": "Rico Dowdle", "number": 13, "position": "RB", "positionLong": "Running Back", "years": "2026 - present", "football": "One half of the running game. Nobody drafted him out of South Carolina in 2020 -- he signed with Dallas as an afterthought, spent five years earning a job, went to Carolina, and has now arrived in Pittsburgh as a genuine starter. Nothing about his career was handed to him.", "life": "His mother told people he was going to end up a Steeler months before it actually happened. She was right, and he has had to hear about it ever since.", "footballCaption": "Between the tackles", "lifeCaption": "Nobody drafted him", "why": "The undrafted grinder is the most Pittsburgh archetype there is. This city adores this exact story.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 13. Lower to the ground than you expect, and hard to bring down."}, {"slug": "jaylen-warren", "tier": "now", "name": "Jaylen Warren", "number": 30, "position": "RB", "positionLong": "Running Back", "years": "2022 - present", "football": "The other half of the running game, and a good lesson in why volume beats fame: he catches passes as well as he runs, so he stays on the field on third down when other backs come off.", "life": "Also completely undrafted. Seven rounds, 250-odd picks, and not one team called his name. He made the roster anyway and then took a starting job off people who were drafted. He plays like a man who remembers.", "footballCaption": "Every down", "lifeCaption": "Nobody drafted him either", "why": "Two undrafted running backs sharing a backfield. If you want a reason to care, that is it.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 30. The smaller back, the one who somehow keeps falling forward for three extra yards."}, {"slug": "pat-freiermuth", "tier": "now", "name": "Pat Freiermuth", "number": 88, "position": "TE", "positionLong": "Tight End", "years": "2021 - present", "football": "The tight end -- the quarterback's safety valve. When a drive is stalling and Pittsburgh needs eight yards right now, this is where the ball goes. Also the man you want near the end zone, because he is simply larger than whoever is covering him.", "life": "Everyone calls him Muth. That is the entire nickname and he seems perfectly happy with it. A New England kid, thoroughly undramatic, does his job and goes home.", "footballCaption": "Over the middle", "lifeCaption": "Just \"Muth\"", "why": "In fantasy, tight end is a thin position and he is a real one. Worth knowing for chapter 07 alone.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 88. One of the biggest bodies out there, usually catching it about ten yards over the middle."}, {"slug": "tj-watt", "tier": "now", "name": "T.J. Watt", "number": 90, "position": "OLB", "positionLong": "Outside Linebacker", "years": "2017 - present", "football": "The best defender on the team and one of the best of his generation. His job is coming around the outside to reach the quarterback before he can throw, and when he gets there the entire building erupts. If Pittsburgh needs one stop to win a game, it usually has to come from him.", "life": "He met his wife Dani at Wisconsin, where she was a serious athlete in her own right -- a professional footballer, Big Ten Forward of the Year, and later a pro in Iceland. They married on a beach in Mexico in 2022 and their daughter Blakely was born in 2025. He is also the youngest of three brothers who all made the NFL, and grew up being called 'the other Watt.'", "footballCaption": "Off the edge", "lifeCaption": "The youngest brother", "why": "If you learn one defensive player all season, make it this one. He is the reason people stand up.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 90. On third down, watch the far outside edge of the defensive line -- he is the one the whole stadium is watching."}, {"slug": "cam-heyward", "tier": "now", "name": "Cam Heyward", "number": 97, "position": "DT", "positionLong": "Defensive Tackle", "years": "2011 - present", "football": "The captain, the interior anchor, and the oldest voice in the room. His job is to occupy two blockers at once so that T.J. Watt gets to run free -- which means his best plays are the ones you never notice. He is in his mid-thirties and still doing it at a level that makes no sense.", "life": "His father was Craig 'Ironhead' Heyward, a Pittsburgh legend and NFL running back who died of brain cancer at thirty-nine, when Cam was a teenager. Cam has spent his whole career carrying that name deliberately -- he and his wife Charlotte run a foundation in his father's memory that works with kids across the city, and he has been the team's nominee for the league's community service award.", "footballCaption": "The anchor", "lifeCaption": "Ironhead's son", "why": "The heart of this team, and the bridge between the current side and the old ones. Pittsburgh loves him unconditionally.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 97, right in the middle of the defensive line. Look for the beard and the man everybody else follows onto the field."}, {"slug": "payton-wilson", "tier": "now", "name": "Payton Wilson", "number": 41, "position": "ILB", "positionLong": "Inside Linebacker", "years": "2024 - present", "football": "He calls the defense -- reads what the offense is about to do and gets ten other men lined up correctly before the ball moves. Then he goes and makes the tackle anyway. Unusually fast for the position.", "life": "He fell to the third round of the draft purely because teams were nervous about his injury history. Several of them have since admitted, out loud, that this was a mistake.", "footballCaption": "Sideline to sideline", "lifeCaption": "The one they passed on", "why": "Watch him for one drive and you will understand what a linebacker actually does.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 41. The linebacker who seems to be involved in every single tackle, sideline to sideline."}, {"slug": "jalen-ramsey", "tier": "now", "name": "Jalen Ramsey", "number": 5, "position": "CB", "positionLong": "Cornerback", "years": "2025 - present", "football": "A genuine star cornerback, brought in to erase the other team's best receiver one-on-one for sixty minutes. It is the most exposed job in the sport: when he wins, nothing happens and nobody notices; when he loses, it is a touchdown and everyone sees it.", "life": "One of the most quotable men in the league and entirely uninterested in pretending otherwise. He has also gone out of his way publicly this year to back a younger teammate in a contract fight, which tells you something real about him.", "footballCaption": "One-on-one, every snap", "lifeCaption": "Never quiet", "why": "The easiest way to learn what a cornerback does -- just watch who he shadows.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 5. Pick the opponent's best receiver, then watch who follows him everywhere -- that is Ramsey."}, {"slug": "joey-porter-jr", "tier": "now", "name": "Joey Porter Jr.", "number": 24, "position": "CB", "positionLong": "Cornerback", "years": "2023 - present", "football": "The other starting corner -- physical, and increasingly the man quarterbacks decide not to throw at. NOTE: as of late August he is in a contract dispute with the team and has not been practising, so there is a real chance he starts the season sidelined or elsewhere. Worth checking before week one.", "life": "His father, Joey Porter Sr., was a Super Bowl-winning Steelers linebacker and one of the most feared trash-talkers of his era. On the day Pittsburgh drafted him, Joey Jr. turned up wearing his dad's old Steelers hoodie. He now plays in front of him.", "footballCaption": "Locked on", "lifeCaption": "His father's number", "why": "A second-generation Steeler in his father's stadium. Pittsburgh loves this more than almost anything.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 24. Tall for a cornerback, long arms, plays right up in the receiver's face."}, {"slug": "chris-boswell", "tier": "now", "name": "Chris Boswell", "number": 9, "position": "K", "positionLong": "Kicker", "years": "2015 - present", "football": "The kicker, and one of the best in football -- which matters more here than most places, because Steelers games have a habit of coming down to three points in bad weather. He has quietly decided more games than most of the famous players.", "life": "He has been doing this for a decade while remaining almost completely anonymous outside Pittsburgh. Such is kicking: you are invisible until the one moment where you are the only thing anyone is looking at.", "footballCaption": "Three points, again", "lifeCaption": "The anonymous important man", "why": "In a division where games end 17-14 in the rain, the kicker is not a footnote.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 9. The smallest man on the field by some distance, and the only one wearing a clean uniform in the fourth quarter."}, {"slug": "joe-greene", "tier": "legend", "name": "Joe Greene", "number": 75, "position": "DT", "positionLong": "Defensive Tackle", "years": "1969 - 1981", "football": "\"Mean Joe.\" The cornerstone of the Steel Curtain, the 1970s defense that won four championships. His number is retired.", "life": "Starred in one of the most famous adverts ever made -- limping off the field, a kid offers him a Coke, and the scariest man in football grins and throws the boy his jersey.", "footballCaption": "The Steel Curtain", "lifeCaption": "\"Hey kid -- catch.\"", "why": "The name behind \"Steel Curtain,\" which you'll hear whenever the defense plays well."}, {"slug": "franco-harris", "tier": "legend", "name": "Franco Harris", "number": 32, "position": "RB", "positionLong": "Running Back", "years": "1972 - 1983", "football": "Caught the Immaculate Reception. December 1972, twenty-two seconds left, fourth down, season over -- a desperate pass ricochets backwards off a collision, and Franco scoops it an inch off the grass without breaking stride and runs it in. It is still voted the greatest play in NFL history, people still argue about whether it was legal, and it is the moment forty years of losing stopped.", "life": "Stayed in Pittsburgh for the rest of his life and was beloved there in a way that is hard to overstate. His number 32 is retired, and there is a statue of him in the Pittsburgh airport -- people touch it on the way to their gate.", "footballCaption": "December 23, 1972", "lifeCaption": "A Pittsburgh lifer", "why": "If one piece of history comes up this season, it is this one."}, {"slug": "myron-cope", "tier": "legend", "name": "Myron Cope", "number": null, "position": "VOICE", "positionLong": "Broadcaster", "years": "1970 - 2005", "football": "Not a player -- the team's radio voice for 35 years, and utterly unmistakable on air.", "life": "Invented the Terrible Towel in 1975 because his station demanded a gimmick. He later signed its rights to a school for people with intellectual disabilities, where his son lived. It has raised millions.", "footballCaption": "In the booth", "lifeCaption": "He made the Towel", "why": "The towel in your hands exists because of him. That's the whole reason he's here."}];
+window.__PLAYERS = [{"slug": "mike-mccarthy", "tier": "now", "name": "Mike McCarthy", "number": null, "position": "HC", "positionLong": "Head Coach", "years": "2026 - present", "football": "The new head coach. He won a Super Bowl in Green Bay and spent fifteen years there before Dallas, and he arrives with a reputation for building offenses and for being unglamorously good at the job. This is his first season in Pittsburgh, so nobody knows how it goes yet -- you are finding out at exactly the same time as everyone else.", "life": "He is from here. He grew up in Greenfield, about four miles from the stadium, and worked in his father's bar on Saw Mill Run Boulevard as a kid. He went from pouring drinks for Steelers fans to running the team those people live and die for. If that does not get you, nothing will.", "footballCaption": "On the sideline", "lifeCaption": "Greenfield kid, come home", "why": "A hometown kid came home to run the whole thing. Watch how the city treats him.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "The one in the headset with the laminated play sheet, chewing gum, arms folded.", "group": "staff", "cue": "No helmet, no pads, no number. He is on the sideline in a headset holding a laminated sheet, and the camera finds him every single time something goes wrong."}, {"slug": "aaron-rodgers", "tier": "now", "name": "Aaron Rodgers", "number": 8, "position": "QB", "positionLong": "Quarterback", "years": "2026 - present", "football": "The quarterback, and one of the greatest to ever play the position: four MVP awards and a Super Bowl ring. He is in his forties now, at the very end of a long career, and this is almost certainly his last real shot at another championship. Every throw he makes this year is a man running out of road.", "life": "Famously his own person -- reads a lot, says exactly what he thinks, and has spent twenty years being the most discussed man in any room. You will hear opinions about him from people who have never watched a full game.", "footballCaption": "Under center", "lifeCaption": "Never short of opinions", "why": "If one name comes up at a party this season, it is his. Learning to spot number 8 gets you into any conversation.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 8. Before every snap he is the one pointing, shouting, moving people around -- nobody else does that much talking.", "group": "qb", "cue": "Before the ball has moved he is pointing at people and shouting, rearranging half the offense. Then everything starts the instant he says so."}, {"slug": "dk-metcalf", "tier": "now", "name": "DK Metcalf", "number": 4, "position": "WR", "positionLong": "Wide Receiver", "years": "2025 - present", "football": "The deep threat. When Pittsburgh takes a shot down the field, it is usually going to him. He is enormous and genuinely one of the fastest men in the league at that size, which should not be possible and is the entire point of him.", "life": "He once entered a real track meet and ran the 100 metres against actual professional sprinters, purely because he wanted to know how he would do. He did not win. He was completely unbothered. That is the whole personality.", "footballCaption": "The deep threat", "lifeCaption": "The track meet", "why": "The easiest player on the entire roster to recognise. Start with him.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 4, and honestly you will not need it. He is 6'4\" and built like a comic book character -- the most physically startling man on the field.", "group": "wr", "cue": "He does not look like he should be able to move that fast. Enormous through the shoulders, and he is already a step past the man covering him."}, {"slug": "michael-pittman", "tier": "now", "name": "Michael Pittman Jr.", "number": 11, "position": "WR", "positionLong": "Wide Receiver", "years": "2026 - present", "football": "Traded to Pittsburgh this year and immediately a primary target. He is not the one who outruns people -- he is the one who goes up in a crowd of defenders and comes down with it anyway. When the offense needs a first down on third and seven, he is a common answer.", "life": "His father, Michael Pittman Sr., was a Super Bowl-winning running back. So he grew up inside NFL locker rooms and has never once looked intimidated by any of this -- it is simply the family business.", "footballCaption": "Contested catches", "lifeCaption": "Second generation", "why": "One of the two names you will hear most on offense. Second generation, and it shows.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 11. Big, square-shouldered, and the one who comes down with the ball in a crowd.", "group": "wr", "cue": "The ball goes up into a crowd of three people and he is the one who comes down still holding it."}, {"slug": "germie-bernard", "tier": "now", "name": "Germie Bernard", "number": 17, "position": "WR", "positionLong": "Wide Receiver", "years": "2026 - present", "football": "A rookie -- Pittsburgh drafted him this year out of Washington, and he is still learning what the NFL is. Quick, and the one more likely to be running deep down the sideline. Some weeks he will look like the future and some weeks he will look twenty-two years old.", "life": "This is his first season as a professional. He will make mistakes on national television in front of sixty-five thousand people, and how he handles that is the story worth watching.", "footballCaption": "Down the sideline", "lifeCaption": "Off the field", "why": "Learn him now and you get to say you knew him first. That is genuinely fun over a career.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 17. The youngest-looking one out there, because he is.", "group": "wr", "cue": "The youngest face out there, running hard down the sideline, visibly still working out how fast this league is."}, {"slug": "rico-dowdle", "tier": "now", "name": "Rico Dowdle", "number": 13, "position": "RB", "positionLong": "Running Back", "years": "2026 - present", "football": "One half of the running game. Nobody drafted him out of South Carolina in 2020 -- he signed with Dallas as an afterthought, spent five years earning a job, went to Carolina, and has now arrived in Pittsburgh as a genuine starter. Nothing about his career was handed to him.", "life": "His mother told people he was going to end up a Steeler months before it actually happened. She was right, and he has had to hear about it ever since.", "footballCaption": "Between the tackles", "lifeCaption": "Nobody drafted him", "why": "The undrafted grinder is the most Pittsburgh archetype there is. This city adores this exact story.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 13. Lower to the ground than you expect, and hard to bring down.", "group": "rb", "cue": "He takes the handoff and disappears into a pile of bodies. A second later he comes out the other side of it."}, {"slug": "jaylen-warren", "tier": "now", "name": "Jaylen Warren", "number": 30, "position": "RB", "positionLong": "Running Back", "years": "2022 - present", "football": "The other half of the running game, and a good lesson in why volume beats fame: he catches passes as well as he runs, so he stays on the field on third down when other backs come off.", "life": "Also completely undrafted. Seven rounds, 250-odd picks, and not one team called his name. He made the roster anyway and then took a starting job off people who were drafted. He plays like a man who remembers.", "footballCaption": "Every down", "lifeCaption": "Nobody drafted him either", "why": "Two undrafted running backs sharing a backfield. If you want a reason to care, that is it.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 30. The smaller back, the one who somehow keeps falling forward for three extra yards.", "group": "rb", "cue": "He gets hit two yards in and somehow finishes the run five yards later, still going forward, with someone on his back."}, {"slug": "pat-freiermuth", "tier": "now", "name": "Pat Freiermuth", "number": 88, "position": "TE", "positionLong": "Tight End", "years": "2021 - present", "football": "The tight end -- the quarterback's safety valve. When a drive is stalling and Pittsburgh needs eight yards right now, this is where the ball goes. Also the man you want near the end zone, because he is simply larger than whoever is covering him.", "life": "Everyone calls him Muth. That is the entire nickname and he seems perfectly happy with it. A New England kid, thoroughly undramatic, does his job and goes home.", "footballCaption": "Over the middle", "lifeCaption": "Just \"Muth\"", "why": "In fantasy, tight end is a thin position and he is a real one. Worth knowing for chapter 07 alone.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 88. One of the biggest bodies out there, usually catching it about ten yards over the middle.", "group": "te", "cue": "Third and eight and the drive is stalling. A very large man catches it ten yards over the middle and falls forward for the first down."}, {"slug": "tj-watt", "tier": "now", "name": "T.J. Watt", "number": 90, "position": "OLB", "positionLong": "Outside Linebacker", "years": "2017 - present", "football": "The best defender on the team and one of the best of his generation. His job is coming around the outside to reach the quarterback before he can throw, and when he gets there the entire building erupts. If Pittsburgh needs one stop to win a game, it usually has to come from him.", "life": "He met his wife Dani at Wisconsin, where she was a serious athlete in her own right -- a professional footballer, Big Ten Forward of the Year, and later a pro in Iceland. They married on a beach in Mexico in 2022 and their daughter Blakely was born in 2025. He is also the youngest of three brothers who all made the NFL, and grew up being called 'the other Watt.'", "footballCaption": "Off the edge", "lifeCaption": "The youngest brother", "why": "If you learn one defensive player all season, make it this one. He is the reason people stand up.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 90. On third down, watch the far outside edge of the defensive line -- he is the one the whole stadium is watching.", "group": "front", "cue": "Third down. Watch the far outside edge of the defensive line, because the whole stadium is already watching him before anything happens."}, {"slug": "cam-heyward", "tier": "now", "name": "Cam Heyward", "number": 97, "position": "DT", "positionLong": "Defensive Tackle", "years": "2011 - present", "football": "The captain, the interior anchor, and the oldest voice in the room. His job is to occupy two blockers at once so that T.J. Watt gets to run free -- which means his best plays are the ones you never notice. He is in his mid-thirties and still doing it at a level that makes no sense.", "life": "His father was Craig 'Ironhead' Heyward, a Pittsburgh legend and NFL running back who died of brain cancer at thirty-nine, when Cam was a teenager. Cam has spent his whole career carrying that name deliberately -- he and his wife Charlotte run a foundation in his father's memory that works with kids across the city, and he has been the team's nominee for the league's community service award.", "footballCaption": "The anchor", "lifeCaption": "Ironhead's son", "why": "The heart of this team, and the bridge between the current side and the old ones. Pittsburgh loves him unconditionally.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 97, right in the middle of the defensive line. Look for the beard and the man everybody else follows onto the field.", "group": "front", "cue": "Right in the middle of the pile, holding off two blockers at once so that somebody behind him runs through clean. The beard is a giveaway."}, {"slug": "payton-wilson", "tier": "now", "name": "Payton Wilson", "number": 41, "position": "ILB", "positionLong": "Inside Linebacker", "years": "2024 - present", "football": "He calls the defense -- reads what the offense is about to do and gets ten other men lined up correctly before the ball moves. Then he goes and makes the tackle anyway. Unusually fast for the position.", "life": "He fell to the third round of the draft purely because teams were nervous about his injury history. Several of them have since admitted, out loud, that this was a mistake.", "footballCaption": "Sideline to sideline", "lifeCaption": "The one they passed on", "why": "Watch him for one drive and you will understand what a linebacker actually does.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 41. The linebacker who seems to be involved in every single tackle, sideline to sideline.", "group": "front", "cue": "He is pointing and shouting at people before the snap, and then he is the one making the tackle fifteen yards away from where he started."}, {"slug": "jalen-ramsey", "tier": "now", "name": "Jalen Ramsey", "number": 5, "position": "CB", "positionLong": "Cornerback", "years": "2025 - present", "football": "A genuine star cornerback, brought in to erase the other team's best receiver one-on-one for sixty minutes. It is the most exposed job in the sport: when he wins, nothing happens and nobody notices; when he loses, it is a touchdown and everyone sees it.", "life": "One of the most quotable men in the league and entirely uninterested in pretending otherwise. He has also gone out of his way publicly this year to back a younger teammate in a contract fight, which tells you something real about him.", "footballCaption": "One-on-one, every snap", "lifeCaption": "Never quiet", "why": "The easiest way to learn what a cornerback does -- just watch who he shadows.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 5. Pick the opponent's best receiver, then watch who follows him everywhere -- that is Ramsey.", "group": "cb", "cue": "Find the other team's best receiver. Now find the man who has followed him absolutely everywhere all afternoon."}, {"slug": "joey-porter-jr", "tier": "now", "name": "Joey Porter Jr.", "number": 24, "position": "CB", "positionLong": "Cornerback", "years": "2023 - present", "football": "The other starting corner -- physical, and increasingly the man quarterbacks decide not to throw at. NOTE: as of late August he is in a contract dispute with the team and has not been practising, so there is a real chance he starts the season sidelined or elsewhere. Worth checking before week one.", "life": "His father, Joey Porter Sr., was a Super Bowl-winning Steelers linebacker and one of the most feared trash-talkers of his era. On the day Pittsburgh drafted him, Joey Jr. turned up wearing his dad's old Steelers hoodie. He now plays in front of him.", "footballCaption": "Locked on", "lifeCaption": "His father's number", "why": "A second-generation Steeler in his father's stadium. Pittsburgh loves this more than almost anything.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 24. Tall for a cornerback, long arms, plays right up in the receiver's face.", "group": "cb", "cue": "Tall for a defensive back, long arms, standing right up in a receiver's face at the line before the ball moves."}, {"slug": "chris-boswell", "tier": "now", "name": "Chris Boswell", "number": 9, "position": "K", "positionLong": "Kicker", "years": "2015 - present", "football": "The kicker, and one of the best in football -- which matters more here than most places, because Steelers games have a habit of coming down to three points in bad weather. He has quietly decided more games than most of the famous players.", "life": "He has been doing this for a decade while remaining almost completely anonymous outside Pittsburgh. Such is kicking: you are invisible until the one moment where you are the only thing anyone is looking at.", "footballCaption": "Three points, again", "lifeCaption": "The anonymous important man", "why": "In a division where games end 17-14 in the rain, the kicker is not a footnote.", "confirmed": "Aug 2026, verified against steelers.com roster", "spot": "Number 9. The smallest man on the field by some distance, and the only one wearing a clean uniform in the fourth quarter.", "group": "k", "cue": "Fourth quarter. One man jogs on wearing a completely spotless uniform while everybody around him is filthy."}, {"slug": "joe-greene", "tier": "legend", "name": "Joe Greene", "number": 75, "position": "DT", "positionLong": "Defensive Tackle", "years": "1969 - 1981", "football": "\"Mean Joe.\" The cornerstone of the Steel Curtain, the 1970s defense that won four championships. His number is retired.", "life": "Starred in one of the most famous adverts ever made -- limping off the field, a kid offers him a Coke, and the scariest man in football grins and throws the boy his jersey.", "footballCaption": "The Steel Curtain", "lifeCaption": "\"Hey kid -- catch.\"", "why": "The name behind \"Steel Curtain,\" which you'll hear whenever the defense plays well."}, {"slug": "franco-harris", "tier": "legend", "name": "Franco Harris", "number": 32, "position": "RB", "positionLong": "Running Back", "years": "1972 - 1983", "football": "Caught the Immaculate Reception. December 1972, twenty-two seconds left, fourth down, season over -- a desperate pass ricochets backwards off a collision, and Franco scoops it an inch off the grass without breaking stride and runs it in. It is still voted the greatest play in NFL history, people still argue about whether it was legal, and it is the moment forty years of losing stopped.", "life": "Stayed in Pittsburgh for the rest of his life and was beloved there in a way that is hard to overstate. His number 32 is retired, and there is a statue of him in the Pittsburgh airport -- people touch it on the way to their gate.", "footballCaption": "December 23, 1972", "lifeCaption": "A Pittsburgh lifer", "why": "If one piece of history comes up this season, it is this one."}, {"slug": "myron-cope", "tier": "legend", "name": "Myron Cope", "number": null, "position": "VOICE", "positionLong": "Broadcaster", "years": "1970 - 2005", "football": "Not a player -- the team's radio voice for 35 years, and utterly unmistakable on air.", "life": "Invented the Terrible Towel in 1975 because his station demanded a gimmick. He later signed its rights to a school for people with intellectual disabilities, where his son lived. It has raised millions.", "footballCaption": "In the booth", "lifeCaption": "He made the Towel", "why": "The towel in your hands exists because of him. That's the whole reason he's here."}];
 window.__PHOTOS = {"mike-mccarthy": {"football": "assets/mike-mccarthy-football.jpg", "life": "assets/mike-mccarthy-life.jpg"}, "aaron-rodgers": {"football": "assets/aaron-rodgers-football.jpg", "life": "assets/aaron-rodgers-life.jpg"}, "dk-metcalf": {"football": "assets/dk-metcalf-football.jpg", "life": "assets/dk-metcalf-life.jpg"}, "michael-pittman": {"football": "assets/michael-pittman-football.jpg", "life": "assets/michael-pittman-life.jpg"}, "germie-bernard": {"football": "assets/germie-bernard-football.jpg", "life": "assets/germie-bernard-life.jpg"}, "rico-dowdle": {"football": "assets/rico-dowdle-football.jpg", "life": "assets/rico-dowdle-life.jpg"}, "jaylen-warren": {"football": "assets/jaylen-warren-football.jpg", "life": "assets/jaylen-warren-life.jpg"}, "pat-freiermuth": {"football": "assets/pat-freiermuth-football.jpg", "life": "assets/pat-freiermuth-life.jpg"}, "tj-watt": {"football": "assets/tj-watt-football.jpg", "life": "assets/tj-watt-life.jpg"}, "cam-heyward": {"football": "assets/cam-heyward-football.jpg", "life": "assets/cam-heyward-life.jpg"}, "payton-wilson": {"football": "assets/payton-wilson-football.jpg", "life": "assets/payton-wilson-life.jpg"}, "jalen-ramsey": {"football": "assets/jalen-ramsey-football.jpg", "life": "assets/jalen-ramsey-life.jpg"}, "joey-porter-jr": {"football": "assets/joey-porter-jr-football.jpg", "life": "assets/joey-porter-jr-life.jpg"}, "chris-boswell": {"football": "assets/chris-boswell-football.jpg", "life": "assets/chris-boswell-life.jpg"}, "joe-greene": {"football": "assets/joe-greene-football.jpg", "life": "assets/joe-greene-life.jpg"}, "franco-harris": {"football": "assets/franco-harris-football.jpg", "life": "assets/franco-harris-life.jpg"}, "myron-cope": {"football": "assets/myron-cope-football.jpg", "life": "assets/myron-cope-life.jpg"}};
 window.__SCENES = [{"slug": "stadium-towels", "where": "Cold open", "aspect": "21/9", "alt": "Acrisure Stadium at night, the crowd on its feet waving gold Terrible Towels.", "caption": "This is the thing the whole guide is pointing at.", "brief": "Wide shot of a packed Acrisure Stadium at night, ideally in the fourth quarter with the crowd standing and gold towels up. The bigger and more chaotic the better -- this is the emotional hook of the whole page."}, {"slug": "line-of-scrimmage", "where": "Ch 01 - what a play is", "aspect": "16/9", "alt": "Two teams lined up facing each other across the line of scrimmage, just before the snap.", "caption": "One line, twenty-two people, and everything about to happen at once.", "brief": "THE most important photo on the page. Both teams lined up facing each other, frozen just before the snap, shot from behind or above the offense so you can see the line between them. This is the single image that makes chapter 01 click."}, {"slug": "the-snap", "where": "Ch 01 - the snap", "aspect": "16/9", "alt": "The center snapping the ball backward between his legs to the quarterback.", "caption": "The starting gun: the ball goes backward between the center's legs.", "brief": "Close on the center and quarterback at the moment of the snap, ball in mid-air or just leaving the ground. Shows what 'the snap' physically is."}, {"slug": "the-chains", "where": "Ch 02 - four downs", "aspect": "16/9", "alt": "Officials on the sideline measuring with the ten-yard chain.", "caption": "The actual chain. Ten yards, measured by hand, in a billion-dollar sport.", "brief": "The chain crew on the sideline holding the two orange poles with the chain stretched between them, ideally mid-measurement. Explains the phrase 'the chains move' better than any paragraph."}, {"slug": "touchdown", "where": "Ch 03 - points", "aspect": "16/9", "alt": "A Steelers player crossing the goal line into the end zone.", "caption": "Six points. Everything else on this page is in service of this.", "brief": "A player crossing the goal line or celebrating in the end zone, Steelers if possible. Wants to feel like a payoff."}, {"slug": "field-goal", "where": "Ch 03 - points", "aspect": "16/9", "alt": "A kicker striking a field goal, with the holder and the uprights behind.", "caption": "Three points, and the reason so many Steelers games are decided by a kicker.", "brief": "A field goal being kicked -- holder on one knee, kicker's leg through the ball, uprights visible in the background if you can get it."}, {"slug": "huddle", "where": "Ch 04 - who's who", "aspect": "16/9", "alt": "The Steelers offense gathered in a huddle before a play.", "caption": "Eleven specialists, about to do eleven different jobs.", "brief": "An offensive huddle, or the offense breaking a huddle and jogging to the line. Shows that these are eleven distinct people with distinct roles."}, {"slug": "penalty-flag", "where": "Ch 05 - watching", "aspect": "16/9", "alt": "A yellow penalty flag lying on the turf.", "caption": "Yellow on the grass. Somebody broke a rule, and you'll know which in a moment.", "brief": "A yellow penalty flag on the field -- ideally in the air or freshly landed on the turf. Simple, iconic, instantly readable."}, {"slug": "helmet", "where": "Ch 06 - Pittsburgh", "aspect": "16/9", "alt": "A Steelers helmet, showing the logo on one side only.", "caption": "The logo is on one side only. Nobody has dared change it in sixty years.", "brief": "A clean shot of the helmet from the RIGHT side, so the logo is visible. If you can find one showing both sides (or the bare left side), even better -- it proves the one-sided thing."}, {"slug": "acrisure-stadium", "where": "Ch 06 - Pittsburgh", "aspect": "21/9", "alt": "Acrisure Stadium on Pittsburgh's North Shore, with the rivers and skyline.", "caption": "The North Shore, where the rivers meet. Outdoors, and in December that matters.", "brief": "Exterior of Acrisure Stadium, ideally with the Pittsburgh skyline and rivers in frame. Establishes place."}, {"slug": "terrible-towel", "where": "Ch 06 - Pittsburgh", "aspect": "16/9", "alt": "A Terrible Towel held up in a crowd.", "caption": "You will be handed one of these. Over your head, in a circle.", "brief": "A Terrible Towel -- either a close-up of one being waved, or a sea of them in a crowd. If you have a family photo holding one, use that instead; it'll mean more."}, {"slug": "draft-board", "where": "Ch 07 - fantasy", "aspect": "16/9", "alt": "A fantasy football draft board or draft app mid-draft.", "caption": "Draft night. Sixty seconds a pick, and the app drafts for you if you stall.", "brief": "A fantasy draft in progress -- a laptop or phone showing a draft board, or a room of people drafting. Doesn't need to be Steelers-related at all."}, {"slug": "game-day", "where": "Ch 09 - your first Sunday", "aspect": "21/9", "alt": "A living room set up for a Sunday game, food out and the TV on.", "caption": "This is what you're actually signing up for.", "brief": "Game day at home -- the TV on, food out, people in jerseys. A real photo of your own living room or family would be far better here than a stock one. This is the last image on the page, so make it warm."}];
 window.__SCENEPIX = {"stadium-towels": "assets/stadium-towels.jpg", "line-of-scrimmage": "assets/line-of-scrimmage.jpg", "the-snap": "assets/the-snap.jpg", "the-chains": "assets/the-chains.jpg", "touchdown": "assets/touchdown.jpg", "field-goal": "assets/field-goal.jpg", "huddle": "assets/huddle.jpg", "penalty-flag": "assets/penalty-flag.jpg", "helmet": "assets/helmet.jpg", "acrisure-stadium": "assets/acrisure-stadium.jpg", "terrible-towel": "assets/terrible-towel.jpg", "draft-board": "assets/draft-board.jpg", "game-day": "assets/game-day.jpg"};
@@ -1418,47 +1557,47 @@ function el(tag, cls, html){
   var photos = window.__PHOTOS || {};
   if(!wrap) return;
 
-  function shotFor(p, pic){
-    var shot = el('div','player-shot');
+  var squad = players.filter(function(p){ return p.tier !== 'legend'; });
+
+  /* ---------- contact sheet ----------
+     Fourteen tiles; tapping one expands it in place. Collapsed by default
+     because fourteen open essays was a wall nobody finished. */
+  squad.forEach(function(p){
+    var pic = photos[p.slug] || {};
+    var item = el('div','sheet-item');
+
+    var tile = el('button','sheet-tile');
+    tile.type = 'button';
+    tile.setAttribute('aria-expanded','false');
+
+    var shot = el('span','sheet-shot');
     if(pic.football){
       var img = new Image();
       img.src = pic.football;
-      img.alt = p.name + ', ' + p.positionLong + ', on the field.';
+      img.alt = p.name + ', ' + p.positionLong + '.';
       img.loading = 'lazy';
       shot.appendChild(img);
     } else {
-      shot.appendChild(el('div','ph',
-        '<span class="big">' + (p.number != null ? p.number : p.position) + '</span>' +
-        '<span class="cap">' + p.footballCaption + '</span>'));
+      shot.appendChild(el('span','ph','<span class="big">' +
+        (p.number != null ? p.number : p.position) + '</span>'));
     }
-    var nm = el('div','player-name');
-    if(p.number != null) nm.appendChild(el('span','no', String(p.number)));
-    nm.appendChild(el('span','nm', p.name));
-    nm.appendChild(el('span','pos', p.positionLong));
-    shot.appendChild(nm);
-    return shot;
-  }
+    var tag = el('span','sheet-tag');
+    if(p.number != null) tag.appendChild(el('span','sheet-no', String(p.number)));
+    tag.appendChild(el('span','sheet-nm', p.name));
+    shot.appendChild(tag);
+    tile.appendChild(shot);
+    tile.appendChild(el('span','sheet-pos', p.positionLong));
+    item.appendChild(tile);
 
-  players.filter(function(p){ return p.tier !== 'legend'; }).forEach(function(p){
-    var pic = photos[p.slug] || {};
-    var card = el('article','player');
-    card.appendChild(shotFor(p, pic));
-
-    var body = el('div','player-body');
-    body.appendChild(el('div','years', p.years + '  \u00b7  ' + p.position));
-    if(p.spot){
-      body.appendChild(el('p','spot',
-        '<span class="spot-k">Find him</span>' + p.spot));
-    }
-    body.appendChild(el('p','bio', p.football));
-
+    var detail = el('div','sheet-detail');
+    detail.hidden = true;
+    if(p.spot) detail.appendChild(el('p','spot','<span class="spot-k">Find him</span>' + p.spot));
+    detail.appendChild(el('p','bio', p.football));
     var life = el('div','player-life');
     var inset = el('div','inset');
     if(pic.life){
       var li = new Image();
-      li.src = pic.life;
-      li.alt = p.name + ', away from football.';
-      li.loading = 'lazy';
+      li.src = pic.life; li.alt = p.name + ', away from football.'; li.loading = 'lazy';
       inset.appendChild(li);
     } else {
       inset.appendChild(el('div','ph','<span class="big">?</span>'));
@@ -1468,14 +1607,28 @@ function el(tag, cls, html){
     txt.appendChild(el('span','lbl','Off the field'));
     txt.appendChild(el('p', null, p.life));
     life.appendChild(txt);
-    body.appendChild(life);
-    body.appendChild(el('p','player-why', p.why));
-    card.appendChild(body);
-    wrap.appendChild(card);
+    detail.appendChild(life);
+    detail.appendChild(el('p','player-why', p.why));
+    item.appendChild(detail);
+
+    tile.addEventListener('click', function(){
+      var open = item.classList.contains('open');
+      // one at a time -- otherwise the grid becomes the wall again
+      wrap.querySelectorAll('.sheet-item.open').forEach(function(o){
+        o.classList.remove('open');
+        o.querySelector('.sheet-tile').setAttribute('aria-expanded','false');
+        o.querySelector('.sheet-detail').hidden = true;
+      });
+      if(!open){
+        item.classList.add('open');
+        tile.setAttribute('aria-expanded','true');
+        detail.hidden = false;
+      }
+    });
+    wrap.appendChild(item);
   });
 
-  /* Legends deliberately get a smaller, denser treatment -- present
-     for context, not competing with the team she is about to watch. */
+  /* ---------- legends: unchanged, still deliberately quiet ---------- */
   if(legWrap){
     players.filter(function(p){ return p.tier === 'legend'; }).forEach(function(p){
       var pic = photos[p.slug] || {};
@@ -1501,8 +1654,142 @@ function el(tag, cls, html){
       legWrap.appendChild(card);
     });
   }
-})();
 
+  /* ============================================================
+     THE SPOTTER
+     A broadcast asks "something happened -- who was that?", so the
+     cue is an observable moment and the NUMBER is the answer, never
+     the prompt. Distractors come from the same position group from
+     round 4 on, otherwise she only learns "big man vs small man".
+     ============================================================ */
+  (function(){
+    var cueEl = $('spCue'); if(!cueEl) return;
+    var optsEl = $('spOpts'), revealEl = $('spReveal'), countEl = $('spCount'),
+        barEl = $('spBar'), scoreEl = $('spScore'),
+        nextBtn = $('spNext'), againBtn = $('spAgain');
+
+    var pool = squad.filter(function(p){ return p.cue; });
+    var ROUNDS = Math.min(10, pool.length);
+    var order = [], idx = 0, right = 0, locked = false;
+
+    function shuffle(a){
+      a = a.slice();
+      for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; }
+      return a;
+    }
+    function build(){
+      // McCarthy first when present: no helmet, no number, a free win and a good joke
+      var rest = shuffle(pool.filter(function(p){ return p.slug !== 'mike-mccarthy'; }));
+      var coach = pool.filter(function(p){ return p.slug === 'mike-mccarthy'; });
+      order = coach.concat(rest).slice(0, ROUNDS);
+      idx = 0; right = 0;
+    }
+    function distractors(answer, roundNo){
+      var others = pool.filter(function(p){ return p.slug !== answer.slug; });
+      var same = shuffle(others.filter(function(p){ return p.group === answer.group; }));
+      var diff = shuffle(others.filter(function(p){ return p.group !== answer.group; }));
+      // early rounds winnable; later rounds force real recognition
+      var picks = roundNo < 3 ? diff.slice(0,3)
+                              : same.slice(0,3).concat(diff).slice(0,3);
+      return picks;
+    }
+    function render(){
+      locked = false;
+      var p = order[idx];
+      cueEl.textContent = p.cue;
+      revealEl.innerHTML = '';
+      nextBtn.hidden = true;
+      againBtn.hidden = true;
+      countEl.textContent = 'Round ' + (idx+1) + ' of ' + ROUNDS;
+      barEl.style.width = (idx / ROUNDS * 100) + '%';
+
+      var tiles = shuffle([p].concat(distractors(p, idx)));
+      optsEl.innerHTML = '';
+      tiles.forEach(function(t, i){
+        var pic = photos[t.slug] || {};
+        var b = el('button','sp-opt');
+        b.type = 'button';
+        // NEUTRAL alt on purpose -- the name in alt text hands the answer
+        // to VoiceOver, to a long-press, and to anyone who looks.
+        b.setAttribute('aria-label','Option ' + (i+1));
+        var face = el('span','sp-face');
+        if(pic.football){
+          var im = new Image();
+          im.src = pic.football;
+          im.alt = '';
+          face.appendChild(im);
+        } else {
+          face.appendChild(el('span','ph','<span class="big">?</span>'));
+        }
+        b.appendChild(face);
+        b.addEventListener('click', function(){ answer(t, p, b); });
+        optsEl.appendChild(b);
+      });
+    }
+    function answer(picked, correct, btn){
+      if(locked) return;            // same guard as ssLock -- score used to inflate
+      locked = true;
+      var got = picked.slug === correct.slug;
+      if(got) right++;
+
+      Array.prototype.forEach.call(optsEl.children, function(b){
+        b.disabled = true;
+        b.classList.add('dim');
+      });
+      btn.classList.remove('dim');
+      btn.classList.add(got ? 'right' : 'wrong');
+
+      var pic = photos[correct.slug] || {};
+      var r = el('div','sp-reveal');
+      r.appendChild(el('p','sp-verdict', got
+        ? '<b>That\u2019s him.</b>'
+        : 'Not him &mdash; that one was <b>' + picked.name + '</b>, ' +
+          picked.positionLong.toLowerCase() + '. This is who you were after:'));
+
+      var who = el('div','sp-who');
+      if(correct.number != null) who.appendChild(el('span','sp-big', String(correct.number)));
+      var wt = el('div','sp-whotxt');
+      wt.appendChild(el('span','n', correct.name));
+      wt.appendChild(el('span','p', correct.positionLong));
+      who.appendChild(wt);
+      r.appendChild(who);
+
+      var lf = el('div','sp-life');
+      var th = el('div','thumb');
+      if(pic.life){
+        var li = new Image(); li.src = pic.life; li.alt = correct.name + ', away from football.';
+        th.appendChild(li);
+      } else {
+        th.appendChild(el('div','ph','<span class="big">?</span>'));
+      }
+      lf.appendChild(th);
+      lf.appendChild(el('p', null, correct.life));
+      r.appendChild(lf);
+      r.appendChild(el('p','player-why', correct.why));
+
+      revealEl.innerHTML = '';
+      revealEl.appendChild(r);
+      scoreEl.textContent = right + ' right';
+      barEl.style.width = ((idx+1) / ROUNDS * 100) + '%';
+
+      if(idx < ROUNDS - 1){ nextBtn.hidden = false; }
+      else {
+        var v = right >= 9 ? 'You know this team. Genuinely \u2014 that is better than most people in the bar.'
+              : right >= 7 ? 'Good. You will recognise most of them on screen by week two.'
+              : right >= 5 ? 'Solid start. Open a few cards above and play it again \u2014 it moves fast.'
+              : 'Worth another go. Tap through the faces above first, then come back.';
+        revealEl.appendChild(el('p','sp-done',
+          '<b>' + right + ' out of ' + ROUNDS + '.</b> ' + v));
+        againBtn.hidden = false;
+      }
+    }
+    nextBtn.addEventListener('click', function(){ idx++; render(); });
+    againBtn.addEventListener('click', function(){
+      build(); scoreEl.textContent = '0 right'; render();
+    });
+    build(); render();
+  })();
+})();
 
 /* ============================================================
    THE RENEGADE CLIP
