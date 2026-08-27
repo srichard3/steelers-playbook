@@ -181,6 +181,114 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
 </style>
 
 <style>
+/* ================= PERSISTENT BAR =================
+   The old TOC was position:static and scrolled away after screen one,
+   leaving 38 screens with no way to jump or return. Native <select> for
+   the jump control on purpose: it is the one dropdown that behaves
+   identically on every phone and needs no custom keyboard handling. */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:80;
+  background:rgba(11,12,14,.94);border-bottom:1px solid #2A3039;
+  display:flex;align-items:center;gap:.6rem;padding:.45rem .8rem;
+}
+@supports (backdrop-filter:blur(8px)){
+  .topbar{background:rgba(11,12,14,.82);backdrop-filter:blur(8px)}
+}
+body{padding-top:56px}
+.tb-home{
+  font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;
+  font-size:.95rem;color:#FFB612;text-decoration:none;white-space:nowrap;
+  padding:.35rem .1rem;
+}
+.tb-sel{
+  flex:1;min-width:0;min-height:38px;
+  background:#15171B;color:#EDF0F3;border:1px solid #2A3039;border-radius:8px;
+  font-family:var(--mono);font-size:.78rem;padding:.35rem .5rem;
+}
+.tb-btn{
+  flex:none;min-height:38px;padding:.35rem .7rem;border-radius:8px;
+  border:1px solid #2A3039;background:#15171B;color:#EDF0F3;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+  white-space:nowrap;
+}
+.tb-btn.gold{background:#FFB612;border-color:#FFB612;color:#0B0C0E;font-weight:700}
+.tb-btn:focus-visible,.tb-sel:focus-visible,.tb-home:focus-visible{outline:3px solid #FFB612;outline-offset:2px}
+
+/* ================= FRONT DOOR =================
+   A static page can still read the clock. This opens on whatever is
+   actually happening today rather than always on chapter one. */
+.frontdoor{
+  background:#15171B;border:1px solid #2A3039;border-left:4px solid #FFB612;
+  border-radius:12px;padding:1.05rem 1.15rem;margin-bottom:1.8rem;
+  display:flex;flex-direction:column;gap:.55rem;
+}
+.fd-k{
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#FFB612;
+}
+.fd-t{
+  font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;
+  font-size:clamp(1.2rem,3vw,1.6rem);line-height:1.1;color:#EDF0F3;
+}
+.fd-p{font-size:.95rem;color:#AFB7C0;line-height:1.55;max-width:50ch}
+.fd-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.2rem}
+.fd-go{
+  min-height:44px;display:flex;align-items:center;padding:.6rem .95rem;border-radius:8px;
+  background:#FFB612;color:#0B0C0E;text-decoration:none;font-weight:700;
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;
+}
+.fd-alt{
+  min-height:44px;display:flex;align-items:center;padding:.6rem .95rem;border-radius:8px;
+  background:transparent;color:#AFB7C0;text-decoration:none;border:1px solid #2A3039;
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;
+}
+
+/* ================= LEAGUE SETUP ================= */
+.setup{display:flex;flex-direction:column;gap:.9rem}
+.setup-q{display:flex;flex-direction:column;gap:.4rem}
+.setup-q .q{font-size:.95rem;color:var(--ink)}
+.setup-opts{display:flex;gap:.4rem;flex-wrap:wrap}
+.setup-opt{
+  min-height:44px;padding:.5rem .85rem;border-radius:8px;
+  border:1px solid var(--line);background:var(--raise);color:var(--ink);
+  font-size:.88rem;
+}
+.setup-opt.on{background:var(--blue-lit);border-color:var(--blue-lit);color:#fff;font-weight:650}
+.setup-note{font-size:.9rem;color:var(--ink-2);border-left:3px solid var(--blue-lit);padding-left:.85rem}
+.setup-note:empty{display:none}
+
+/* ================= DRAFT CARD =================
+   Built to be screenshotted and carried into a live draft with no signal. */
+.dcard{
+  border:2px solid var(--gold-lit);border-radius:12px;overflow:hidden;
+  background:var(--raise);
+}
+.dcard-h{
+  background:var(--gold-lit);color:#0B0C0E;padding:.7rem 1rem;
+  display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;flex-wrap:wrap;
+}
+.dcard-h .t{font-family:var(--display);text-transform:uppercase;font-size:1.15rem;letter-spacing:.04em}
+.dcard-h .s{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase}
+.dcard-b{padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.9rem}
+.dblock{display:flex;flex-direction:column;gap:.35rem}
+.dblock .k{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-ink);
+}
+.dblock p,.dblock li{font-size:.92rem;color:var(--ink-2);line-height:1.5}
+.dblock ol,.dblock ul{margin:0;padding-left:1.1rem;display:flex;flex-direction:column;gap:.25rem}
+.dblock b{color:var(--ink)}
+.dpicks{
+  display:flex;flex-wrap:wrap;gap:.35rem;font-family:var(--mono);font-variant-numeric:tabular-nums;
+}
+.dpick{
+  background:var(--gold-wash);color:var(--gold-ink);border-radius:6px;
+  padding:.3rem .5rem;font-size:.82rem;font-weight:700;
+}
+.drule{
+  background:var(--sink);border-left:3px solid var(--ore-lit);border-radius:0 8px 8px 0;
+  padding:.7rem .85rem;font-size:.93rem;color:var(--ink);line-height:1.5;
+}
+
+
 /* ================= THE DARK SLAB =================
    The opening is black in BOTH themes, on purpose. Real Steelers gold
    (#FFB612) is ~1.7:1 on a pale ground -- it cannot carry text there.
@@ -787,7 +895,30 @@ footer p{font-size:.88rem;color:var(--ink-3)}
 }
 </style>
 
-<main>
+<nav class="topbar" aria-label="Site">
+  <a class="tb-home" href="#top">Playbook</a>
+  <label class="sr" for="tbJump">Jump to a chapter</label>
+  <select class="tb-sel" id="tbJump">
+    <option value="">Jump to&hellip;</option>
+    <option value="#c1">01 &middot; What one play is</option>
+    <option value="#c2">02 &middot; Four downs</option>
+    <option value="#c3">03 &middot; Points</option>
+    <option value="#c4">04 &middot; Who's who</option>
+    <option value="#c5">05 &middot; How to watch</option>
+    <option value="#c6">06 &middot; Pittsburgh</option>
+    <option value="#players">&nbsp;&nbsp;&rarr; Who was that? (roster)</option>
+    <option value="#c7">07 &middot; Fantasy</option>
+    <option value="#draftcard">&nbsp;&nbsp;&rarr; Draft card</option>
+    <option value="#c8">08 &middot; Quiz</option>
+    <option value="#c9">09 &middot; Your first Sunday</option>
+  </select>
+  <button class="tb-btn" id="tbResume" hidden>Resume</button>
+</nav>
+
+<main id="top">
+
+<div class="wrap" id="frontDoor"></div>
+
 
 <!-- ============ COLD OPEN + MASTHEAD (one dark slab) ============ -->
 <div class="slab">
@@ -1252,10 +1383,10 @@ footer p{font-size:.88rem;color:var(--ink-3)}
     </div>
 
     <h3>The team she's about to watch</h3>
-    <p style="color:var(--ink-2);max-width:58ch">Fourteen faces. <strong>Do not try
-      to memorise them.</strong> Tap any one you're curious about, read it, close it
-      again &mdash; then play the game underneath, which is where they actually
-      stick.</p>
+    <p style="color:var(--ink-2);max-width:58ch">Fourteen faces. Tap any one to read
+      about him, then close it again. <strong>You are not trying to learn all
+      fourteen today</strong> &mdash; four or five is a real result, and the game
+      underneath will tell you which ones you already have.</p>
     <div class="sheet" id="players"></div>
 
     <figure style="margin-top:2rem">
@@ -1373,9 +1504,10 @@ footer p{font-size:.88rem;color:var(--ink-3)}
       </div>
       <figcaption>Everyone's quarterback is fine. Almost nobody's running back is.
         <b>You spend early picks where being right is worth the most</b> &mdash;
-        and the quarterback you take in round ten will score close to what the one
-        taken in round two scores. That's a whole extra good player, for free.
-        (Unless it's superflex. Ask.)</figcaption>
+        The exact sizes shift year to year, and people argue about quarterback
+        constantly &mdash; treat the shape as the point, not the numbers. And if
+        your league is superflex, this chart is wrong for you: take quarterbacks
+        early.</figcaption>
     </figure>
 
     <div class="lab">
@@ -1419,13 +1551,31 @@ footer p{font-size:.88rem;color:var(--ink-3)}
 
     <h3 style="margin-top:1.2rem">The in-season routine</h3>
     <div class="rules">
-      <div class="rule-card"><h3>Tuesday night</h3><p>Put in your <strong>waiver claims</strong> for players you want. Claims process overnight in a single batch &mdash; usually early Wednesday &mdash; and resolve in priority order. You don't have to be <em>fastest</em>, you have to be <em>early</em>. This is where leagues are won.</p></div>
+      <div class="rule-card"><h3>Tuesday night</h3><p>Put in your <strong>waiver claims</strong> for players you want. Claims process overnight in one batch, usually early Wednesday. You don't have to be <em>fastest</em>, you have to be <em>early</em>. This is where leagues are won.</p><p><strong>Ask which system your league uses.</strong> Either <em>priority order</em> (everyone has a queue position, and using it sends you to the back) or <strong>FAAB</strong>, a notional $100 budget you bid blind and which has to last all season. If it's FAAB: a genuinely good player is worth 20&ndash;30 of it, a hunch is worth 1&ndash;2, and bidding nothing all year is how you lose every claim to somebody spending fourteen dollars.</p></div>
       <div class="rule-card"><h3>Sunday morning</h3><p>Check the injury report and set your lineup. <strong>Each player locks at his own kickoff</strong>, not all at once &mdash; so a 4:25 player can still be swapped at 2pm. Never leave a questionable player in and forget: an inactive scores zero.</p></div>
       <div class="rule-card"><h3>Every single week</h3><p>Actually open the app. More fantasy losses come from lineups nobody set &mdash; a player on a bye scoring zero &mdash; than from bad drafting. It takes ninety seconds.</p></div>
-      <div class="rule-card"><h3>When someone gets hurt</h3><p>His backup just inherited twenty touches a game. Claim him immediately, even if your bench is full &mdash; drop your worst player without agonising. Whoever claims him instead will beat you with him in November.</p></div>
+      <div class="rule-card"><h3>When someone gets hurt</h3><p>His backup just inherited twenty touches a game. Claim him immediately, even if your bench is full &mdash; drop your worst player without agonising. Whoever claims him instead will beat you with him in November.</p><p>That backup has a name: he is the injured player's <strong>handcuff</strong>. When somebody in your league says &ldquo;you should grab his handcuff,&rdquo; that is what they mean.</p></div>
       <div class="rule-card"><h3>Trades</h3><p>Reply to every offer, even to decline. Be sceptical of two-for-one deals: you can only start nine players, so giving up depth means someone off your bench now starts, and they're on your bench for a reason.</p></div>
       <div class="rule-card"><h3>The one real faux pas</h3><p>Don't stop setting your lineup in Week 13 because you're eliminated. A dead team wrecks other people's playoff races, and it's the only thing that genuinely annoys a league.</p></div>
     </div>
+
+    <figure>
+      <h3>Three questions, once</h3>
+      <p style="color:var(--ink-2);font-size:.95rem;max-width:56ch">Your league's
+        settings change what half the advice on this page should say. Answer these
+        and the draft card below rewrites itself for your league. They're all on
+        your league's rules page.</p>
+      <div class="box pad setup" id="leagueSetup"></div>
+    </figure>
+
+    <figure id="draftcard" style="margin-top:1.4rem">
+      <h3>The draft card</h3>
+      <p style="color:var(--ink-2);font-size:.95rem;max-width:56ch">This is the
+        whole chapter compressed to one screen. <strong>Screenshot it</strong> and
+        have it open on your phone during the draft &mdash; it works with no signal
+        and you will not want to be scrolling a website while a clock runs.</p>
+      <div class="dcard" id="dcardBody"></div>
+    </figure>
 
     <div class="lab">
       <div class="lab-head">
@@ -1545,6 +1695,312 @@ function el(tag, cls, html){
   if(html != null) e.innerHTML = html;
   return e;
 }
+
+
+/* ============================================================
+   STORAGE
+   Safari private mode throws on setItem, so every read and write is
+   guarded and the page must render correctly with no stored value.
+   Deliberately NOT stored: any completion percentage. A gift that
+   keeps score of how much you have not read becomes homework.
+   ============================================================ */
+var KEY = 'playbook.v1';
+var store = (function(){
+  var mem = {};
+  function read(){
+    try {
+      var raw = localStorage.getItem(KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch(e){ return mem; }
+  }
+  function write(o){
+    mem = o;
+    try { localStorage.setItem(KEY, JSON.stringify(o)); } catch(e){}
+  }
+  return {
+    get: function(k, d){ var o = read(); return (k in o) ? o[k] : d; },
+    set: function(k, v){ var o = read(); o[k] = v; write(o); }
+  };
+})();
+
+/* ============================================================
+   PERSISTENT BAR  ::  jump + resume
+   ============================================================ */
+(function(){
+  var sel = $('tbJump'), resume = $('tbResume');
+  if(!sel) return;
+
+  sel.addEventListener('change', function(){
+    var v = sel.value;
+    sel.value = '';
+    if(!v) return;
+    var t = document.querySelector(v);
+    if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  // remember roughly where she was, so a second session can continue
+  var ids = ['c1','c2','c3','c4','c5','c6','c7','c8','c9'];
+  var last = store.get('lastSection','');
+  if(last && document.getElementById(last)){
+    resume.hidden = false;
+    resume.textContent = 'Resume ' + last.toUpperCase();
+    resume.addEventListener('click', function(){
+      var t = document.getElementById(last);
+      if(t) t.scrollIntoView({behavior:'smooth', block:'start'});
+      resume.hidden = true;
+    });
+  }
+  var tick;
+  window.addEventListener('scroll', function(){
+    clearTimeout(tick);
+    tick = setTimeout(function(){
+      var mid = window.scrollY + window.innerHeight/2, cur = '';
+      ids.forEach(function(id){
+        var e = document.getElementById(id);
+        if(e && e.offsetTop <= mid) cur = id;
+      });
+      if(cur) store.set('lastSection', cur);
+    }, 400);
+  }, {passive:true});
+})();
+
+/* ============================================================
+   THE FRONT DOOR
+   A static page cannot send a notification, but it can read the
+   clock. Opening on what is actually happening today is most of
+   the value of a reminder, at none of the cost.
+   ============================================================ */
+(function(){
+  var host = $('frontDoor');
+  if(!host) return;
+  var now = new Date();
+  var day = now.getDay();            // 0 Sun .. 6 Sat
+  var hour = now.getHours();
+  var month = now.getMonth();        // 0-11
+  var card = null;
+
+  function make(k, t, p, links){
+    var d = el('div','frontdoor');
+    d.appendChild(el('span','fd-k', k));
+    d.appendChild(el('span','fd-t', t));
+    d.appendChild(el('p','fd-p', p));
+    var row = el('div','fd-row');
+    links.forEach(function(l, i){
+      var a = document.createElement('a');
+      a.className = i === 0 ? 'fd-go' : 'fd-alt';
+      a.href = l[1];
+      a.textContent = l[0];
+      row.appendChild(a);
+    });
+    d.appendChild(row);
+    return d;
+  }
+
+  var drafted = store.get('drafted', false);
+
+  if(!drafted && (month === 7 || month === 8)){
+    // late Aug / Sept -- drafts are happening now
+    card = make('Draft season',
+      'Draft coming up?',
+      'Everything you actually need on the night fits on one card. Read the ' +
+      'fantasy chapter when you have twenty minutes, but if the draft is soon, ' +
+      'go straight to the card and screenshot it.',
+      [['The draft card','#draftcard'], ['Start from the top','#c1']]);
+  } else if(day === 0 && hour < 13){
+    card = make('Sunday morning',
+      'Set your lineup first',
+      'Before anything else: open your fantasy app, check nobody is injured or ' +
+      'on a bye, and set your lineup. Each player locks at his own kickoff, not ' +
+      'all at once.',
+      [['What to check','#c7'], ['What to watch today','#c9']]);
+  } else if(day === 0){
+    card = make('Sunday, game time',
+      'Who was that?',
+      'Games are on. If someone makes a play and you want to know who it was, ' +
+      'the roster has every number and face in one place.',
+      [['Open the roster','#players'], ['What to watch for','#c9']]);
+  } else if(day === 2 && hour >= 16){
+    card = make('Tuesday evening',
+      'Waivers close tonight',
+      'Claims process overnight. If anybody got hurt this weekend, their backup ' +
+      'is the pickup, and tonight is when you put the claim in.',
+      [['The weekly routine','#c7'], ['Open the roster','#players']]);
+  } else if(store.get('lastSection','')){
+    var lastId = store.get('lastSection','');
+    card = make('Welcome back',
+      'Pick up where you left off',
+      'You were partway through. Nothing here needs finishing in one go.',
+      [['Continue', '#' + lastId], ['Start from the top','#c1']]);
+  }
+  if(card) host.appendChild(card);
+})();
+
+/* ============================================================
+   LEAGUE SETUP  ::  three answers rewrite the draft card
+   The old chapter asserted one waiver system as if it were the only
+   one, which is how you lose every claim in a FAAB league.
+   ============================================================ */
+(function(){
+  var host = $('leagueSetup');
+  if(!host) return;
+
+  var QS = [
+    {k:'ppr',    q:'Does your league give a point for every catch?',
+     opts:[['Yes, PPR','yes'],['No','no'],['Not sure yet','?']]},
+    {k:'flex',   q:'Can you start a second quarterback? (&ldquo;superflex&rdquo;)',
+     opts:[['Yes, superflex','yes'],['No','no'],['Not sure yet','?']]},
+    {k:'waiver', q:'How do waiver claims work?',
+     opts:[['Priority order','priority'],['FAAB budget','faab'],['Not sure yet','?']]}
+  ];
+
+  QS.forEach(function(item){
+    var w = el('div','setup-q');
+    w.appendChild(el('span','q', item.q));
+    var row = el('div','setup-opts');
+    item.opts.forEach(function(o){
+      var b = el('button','setup-opt', o[0]);
+      b.type = 'button';
+      if(store.get(item.k,'?') === o[1]) b.classList.add('on');
+      b.addEventListener('click', function(){
+        store.set(item.k, o[1]);
+        Array.prototype.forEach.call(row.children, function(c){ c.classList.remove('on'); });
+        b.classList.add('on');
+        renderCard();
+      });
+      row.appendChild(b);
+    });
+    w.appendChild(row);
+    host.appendChild(w);
+  });
+
+  // optional: pick slot + league size, which turns into her actual pick numbers
+  var extra = el('div','setup-q');
+  extra.innerHTML =
+    '<span class="q">Optional: how many teams, and which pick are you? ' +
+    '<em style="color:var(--ink-3)">(gives you your exact pick numbers)</em></span>';
+  var row2 = el('div','setup-opts');
+  ['teams','slot'].forEach(function(k){
+    var i = document.createElement('input');
+    i.type='number'; i.min='1'; i.max='20'; i.className='setup-opt';
+    i.style.width='7.5rem';
+    i.placeholder = k === 'teams' ? 'teams (12)' : 'your pick (3)';
+    i.setAttribute('aria-label', k === 'teams' ? 'Number of teams' : 'Your draft position');
+    var v = store.get(k, '');
+    if(v) i.value = v;
+    i.addEventListener('input', function(){
+      store.set(k, i.value);
+      renderCard();
+    });
+    row2.appendChild(i);
+  });
+  extra.appendChild(row2);
+  host.appendChild(extra);
+})();
+
+/* ============================================================
+   THE DRAFT CARD
+   One screen, screenshot-able, works with no signal. Contains the
+   thing the chapter never said: what to do when the queue is empty
+   and the clock is running.
+   ============================================================ */
+function renderCard(){
+  var host = $('dcardBody');
+  if(!host) return;
+  var ppr = store.get('ppr','?'), flex = store.get('flex','?'), wv = store.get('waiver','?');
+  var teams = parseInt(store.get('teams',''),10), slot = parseInt(store.get('slot',''),10);
+
+  var h = el('div','dcard-h');
+  h.appendChild(el('span','t','Draft card'));
+  var tags = [];
+  if(ppr === 'yes') tags.push('PPR'); else if(ppr === 'no') tags.push('Non-PPR');
+  if(flex === 'yes') tags.push('Superflex');
+  h.appendChild(el('span','s', tags.length ? tags.join(' \u00b7 ') : 'Answer the three questions above'));
+
+  var b = el('div','dcard-b');
+
+  // 1. her actual picks
+  if(teams > 1 && slot > 0 && slot <= teams){
+    var picks = [], round;
+    for(round = 0; round < 8; round++){
+      picks.push(round % 2 === 0 ? round*teams + slot : round*teams + (teams - slot + 1));
+    }
+    var pb = el('div','dblock');
+    pb.appendChild(el('span','k','Your first eight picks'));
+    var pr = el('div','dpicks');
+    picks.forEach(function(n, i){ pr.appendChild(el('span','dpick','R' + (i+1) + ' \u2192 #' + n)); });
+    pb.appendChild(pr);
+    pb.appendChild(el('p', null, 'The order reverses every round, so the gaps between your picks change. ' +
+      (slot <= teams/2
+        ? 'You pick early, which means a long wait for your second one \u2014 plan those two together.'
+        : 'You pick late, so two of your picks come back to back \u2014 treat them as a pair.')));
+    b.appendChild(pb);
+  }
+
+  // 2. the skeleton
+  var sk = el('div','dblock');
+  sk.appendChild(el('span','k','Round by round'));
+  var ol = document.createElement('ol');
+  var rows = flex === 'yes'
+    ? ['<b>Rounds 1&ndash;2:</b> best running back or receiver available.',
+       '<b>Rounds 3&ndash;5:</b> superflex league, so get your <b>two quarterbacks</b> in here. Do not be last.',
+       '<b>Rounds 6&ndash;10:</b> back to running backs and receivers. Tight end somewhere in here.',
+       '<b>Last two rounds:</b> kicker, then defense. Never earlier.']
+    : ['<b>Rounds 1&ndash;5:</b> running backs and receivers only. This is where leagues are won.',
+       '<b>Rounds 6&ndash;8:</b> a tight end, and your first quarterback. One is enough.',
+       '<b>Rounds 9&ndash;13:</b> bench depth &mdash; backups to good players, and anyone whose starter looks shaky.',
+       '<b>Last two rounds:</b> kicker, then defense. Never earlier.'];
+  rows.forEach(function(r){ var li = document.createElement('li'); li.innerHTML = r; ol.appendChild(li); });
+  sk.appendChild(ol);
+  b.appendChild(sk);
+
+  // 3. THE missing rule
+  var rule = el('div','dblock');
+  rule.appendChild(el('span','k','When the clock is running and you have no idea'));
+  rule.appendChild(el('div','drule',
+    'Take the <b>highest-ADP player at a position you still need.</b> ADP is on the ' +
+    'screen next to every name. That is it &mdash; that is the whole rule, and it is ' +
+    'never a disaster. Letting the clock run out and having the app pick for you is.'));
+  b.appendChild(rule);
+
+  // 4. the don'ts
+  var d = el('div','dblock');
+  d.appendChild(el('span','k','Four things not to do'));
+  var ul = document.createElement('ul');
+  [ 'No kicker or defense before the last two rounds. None.',
+    flex === 'yes'
+      ? 'Do take two quarterbacks &mdash; superflex is the one format where that is right.'
+      : 'One quarterback. A second is a wasted pick you could have spent on a starter.',
+    'Never two of your starters on the same bye week. Check before you confirm.',
+    'Never let the clock expire. Queue three names during other people\u2019s picks.'
+  ].forEach(function(t){ var li = document.createElement('li'); li.innerHTML = t; ul.appendChild(li); });
+  d.appendChild(ul);
+  b.appendChild(d);
+
+  // 5. waivers, correct for HER league
+  var w = el('div','dblock');
+  w.appendChild(el('span','k','First thing Tuesday, all season'));
+  w.appendChild(el('p', null, wv === 'faab'
+    ? 'Your league uses <b>FAAB</b>: one notional $100 budget, bid blind, must last the whole season. A genuinely good pickup is worth 20\u201330 of it. A hunch is worth 1\u20132. Bidding nothing all year is how you lose every claim.'
+    : wv === 'priority'
+      ? 'Your league uses <b>priority order</b>: everyone has a queue position and using it sends you to the back. So spend it on someone who will actually start for you, not a dart.'
+      : '<b>Find out whether it is priority order or FAAB.</b> They are played completely differently, and guessing wrong costs you every claim in the first month.'));
+  b.appendChild(w);
+
+  // 6. PPR nudge
+  if(ppr === 'yes' || ppr === 'no'){
+    var pn = el('div','dblock');
+    pn.appendChild(el('span','k','Because it is ' + (ppr === 'yes' ? 'PPR' : 'not PPR')));
+    pn.appendChild(el('p', null, ppr === 'yes'
+      ? 'Catches are worth a point each, so favour players who catch a lot \u2014 pass-catching running backs and receivers who get targeted often beat flashier players who score occasionally.'
+      : 'No points for catches, so raw yardage and touchdowns are what matter. The big-play receiver is worth more here than he would be in PPR.'));
+    b.appendChild(pn);
+  }
+
+  host.innerHTML = '';
+  host.appendChild(h);
+  host.appendChild(b);
+}
+renderCard();
 
 /* ============================================================
    06 \u00b7 PLAYER CARDS
@@ -1670,7 +2126,10 @@ function el(tag, cls, html){
 
     var pool = squad.filter(function(p){ return p.cue; });
     var ROUNDS = Math.min(10, pool.length);
-    var order = [], idx = 0, right = 0, locked = false;
+    var order = [], idx = 0, locked = false;
+    var leeches = [];   // missed players, brought back later in the same run
+    var known = [];     // correctly identified -> becomes "you know these now"
+    var retry = false;
 
     function shuffle(a){
       a = a.slice();
@@ -1678,20 +2137,16 @@ function el(tag, cls, html){
       return a;
     }
     function build(){
-      // McCarthy first when present: no helmet, no number, a free win and a good joke
       var rest = shuffle(pool.filter(function(p){ return p.slug !== 'mike-mccarthy'; }));
       var coach = pool.filter(function(p){ return p.slug === 'mike-mccarthy'; });
       order = coach.concat(rest).slice(0, ROUNDS);
-      idx = 0; right = 0;
+      idx = 0; leeches = []; known = []; retry = false;
     }
-    function distractors(answer, roundNo){
+    function distractors(answer, roundNo, howMany){
       var others = pool.filter(function(p){ return p.slug !== answer.slug; });
       var same = shuffle(others.filter(function(p){ return p.group === answer.group; }));
       var diff = shuffle(others.filter(function(p){ return p.group !== answer.group; }));
-      // early rounds winnable; later rounds force real recognition
-      var picks = roundNo < 3 ? diff.slice(0,3)
-                              : same.slice(0,3).concat(diff).slice(0,3);
-      return picks;
+      return roundNo < 3 ? diff.slice(0, howMany) : same.concat(diff).slice(0, howMany);
     }
     function render(){
       locked = false;
@@ -1700,51 +2155,64 @@ function el(tag, cls, html){
       revealEl.innerHTML = '';
       nextBtn.hidden = true;
       againBtn.hidden = true;
-      countEl.textContent = 'Round ' + (idx+1) + ' of ' + ROUNDS;
+      countEl.textContent = retry ? 'One more look' : 'Round ' + (idx+1) + ' of ' + ROUNDS;
       barEl.style.width = (idx / ROUNDS * 100) + '%';
 
-      var tiles = shuffle([p].concat(distractors(p, idx)));
+      // a resurfaced miss gets two tiles, not four -- the retry is meant to be
+      // won, so the round ends on "that's him" rather than a second failure
+      var tiles = shuffle([p].concat(distractors(p, idx, retry ? 1 : 3)));
       optsEl.innerHTML = '';
       tiles.forEach(function(t, i){
         var pic = photos[t.slug] || {};
         var b = el('button','sp-opt');
         b.type = 'button';
-        // NEUTRAL alt on purpose -- the name in alt text hands the answer
-        // to VoiceOver, to a long-press, and to anyone who looks.
         b.setAttribute('aria-label','Option ' + (i+1));
         var face = el('span','sp-face');
         if(pic.football){
           var im = new Image();
           im.src = pic.football;
-          im.alt = '';
+          im.alt = '';        // neutral: the name in alt hands away the answer
           face.appendChild(im);
         } else {
           face.appendChild(el('span','ph','<span class="big">?</span>'));
         }
         b.appendChild(face);
+        // scaffolding: names shown for the first rounds, then withdrawn
+        if(idx < 3 || retry) b.appendChild(el('span','sp-name', t.name));
         b.addEventListener('click', function(){ answer(t, p, b); });
         optsEl.appendChild(b);
       });
     }
     function answer(picked, correct, btn){
-      if(locked) return;            // same guard as ssLock -- score used to inflate
+      if(locked) return;
       locked = true;
       var got = picked.slug === correct.slug;
-      if(got) right++;
+      if(got){
+        if(known.indexOf(correct.slug) < 0) known.push(correct.slug);
+        var li = leeches.indexOf(correct.slug);
+        if(li >= 0) leeches.splice(li, 1);
+      } else if(leeches.indexOf(correct.slug) < 0){
+        leeches.push(correct.slug);
+      }
 
       Array.prototype.forEach.call(optsEl.children, function(b){
-        b.disabled = true;
-        b.classList.add('dim');
+        b.disabled = true; b.classList.add('dim');
       });
       btn.classList.remove('dim');
       btn.classList.add(got ? 'right' : 'wrong');
 
       var pic = photos[correct.slug] || {};
       var r = el('div','sp-reveal');
-      r.appendChild(el('p','sp-verdict', got
-        ? '<b>That\u2019s him.</b>'
-        : 'Not him &mdash; that one was <b>' + picked.name + '</b>, ' +
-          picked.positionLong.toLowerCase() + '. This is who you were after:'));
+
+      if(got){
+        r.appendChild(el('p','sp-verdict','<b>That&rsquo;s him.</b>'));
+      } else {
+        // she missed for want of a discriminating feature, so give her the
+        // feature. Never end on an instruction to go and re-read something.
+        r.appendChild(el('p','sp-verdict',
+          'That one was <b>' + picked.name + '</b>. Here&rsquo;s the tell for the man you wanted:'));
+        if(correct.spot) r.appendChild(el('p','spot','<span class="spot-k">The tell</span>' + correct.spot));
+      }
 
       var who = el('div','sp-who');
       if(correct.number != null) who.appendChild(el('span','sp-big', String(correct.number)));
@@ -1754,38 +2222,59 @@ function el(tag, cls, html){
       who.appendChild(wt);
       r.appendChild(who);
 
-      var lf = el('div','sp-life');
-      var th = el('div','thumb');
-      if(pic.life){
-        var li = new Image(); li.src = pic.life; li.alt = correct.name + ', away from football.';
-        th.appendChild(li);
-      } else {
-        th.appendChild(el('div','ph','<span class="big">?</span>'));
+      if(got){
+        var lf = el('div','sp-life');
+        var th = el('div','thumb');
+        if(pic.life){
+          var im2 = new Image(); im2.src = pic.life; im2.alt = correct.name + ', away from football.';
+          th.appendChild(im2);
+        } else { th.appendChild(el('div','ph','<span class="big">?</span>')); }
+        lf.appendChild(th);
+        lf.appendChild(el('p', null, correct.life));
+        r.appendChild(lf);
       }
-      lf.appendChild(th);
-      lf.appendChild(el('p', null, correct.life));
-      r.appendChild(lf);
-      r.appendChild(el('p','player-why', correct.why));
 
       revealEl.innerHTML = '';
       revealEl.appendChild(r);
-      scoreEl.textContent = right + ' right';
+      scoreEl.textContent = known.length + ' learned';
       barEl.style.width = ((idx+1) / ROUNDS * 100) + '%';
 
-      if(idx < ROUNDS - 1){ nextBtn.hidden = false; }
-      else {
-        var v = right >= 9 ? 'You know this team. Genuinely \u2014 that is better than most people in the bar.'
-              : right >= 7 ? 'Good. You will recognise most of them on screen by week two.'
-              : right >= 5 ? 'Solid start. Open a few cards above and play it again \u2014 it moves fast.'
-              : 'Worth another go. Tap through the faces above first, then come back.';
-        revealEl.appendChild(el('p','sp-done',
-          '<b>' + right + ' out of ' + ROUNDS + '.</b> ' + v));
-        againBtn.hidden = false;
-      }
+      if(idx < ROUNDS - 1 || leeches.length){
+        nextBtn.hidden = false;
+        nextBtn.textContent = retry ? 'Carry on' : 'Next one';
+      } else { finish(); }
     }
-    nextBtn.addEventListener('click', function(){ idx++; render(); });
+    function finish(){
+      var card = el('div','sp-done');
+      if(known.length){
+        var names = known.map(function(sl){
+          var p = pool.filter(function(x){ return x.slug === sl; })[0];
+          return p ? (p.number != null ? p.number + ' ' + p.name : p.name) : '';
+        }).filter(Boolean);
+        card.innerHTML = '<b>You know these ' + names.length + ' now:</b> ' +
+          names.join(' &middot; ') + '.<br><br>That is a real result. Nobody learns ' +
+          'fourteen strangers in one sitting, and you only need a handful before a ' +
+          'game starts making sense.';
+        store.set('spotterKnown', known);
+      } else {
+        card.innerHTML = 'Have another go whenever &mdash; the faces above are all still there.';
+      }
+      revealEl.appendChild(card);
+      againBtn.hidden = false;
+    }
+    nextBtn.addEventListener('click', function(){
+      // interleave a missed player back in instead of marching straight on:
+      // ten rounds of ten different faces is ten single exposures
+      if(!retry && leeches.length && (idx >= ROUNDS - 1 || (idx > 1 && idx % 3 === 0))){
+        var slug = leeches.shift();
+        var p = pool.filter(function(x){ return x.slug === slug; })[0];
+        if(p){ order[idx] = p; retry = true; render(); return; }
+      }
+      retry = false;
+      if(idx < ROUNDS - 1){ idx++; render(); } else { finish(); }
+    });
     againBtn.addEventListener('click', function(){
-      build(); scoreEl.textContent = '0 right'; render();
+      build(); scoreEl.textContent = '0 learned'; render();
     });
     build(); render();
   })();
