@@ -31,6 +31,10 @@
 
 /* ---------------- TOKENS ---------------- */
 :root{
+  /* The fixed site bar is two rows on a phone and one row on a laptop.
+     Everything that has to clear it reads this token. */
+  --topbar:102px;
+
   /* Safari paints its own chrome -- select popups, scrollbars, form controls --
      and without color-scheme it paints them light on top of a dark page. */
   color-scheme:light;
@@ -179,10 +183,11 @@ button{
   -webkit-appearance:none;appearance:none;
 }
 html{-webkit-tap-highlight-color:rgba(255,182,18,.22)}
-/* the topbar is fixed at 56px, so anchors and the jump menu would otherwise
-   land with the section heading hidden underneath it */
-html{scroll-padding-top:64px}
-[id]{scroll-margin-top:64px}
+/* the site bar is fixed, so anchors and the jump menu would otherwise land
+   with the section heading hidden underneath it */
+@media(min-width:720px){ :root{--topbar:58px} }
+html{scroll-padding-top:calc(var(--topbar) + 10px)}
+[id]{scroll-margin-top:calc(var(--topbar) + 10px)}
 :where(a,button,input,[tabindex]):focus-visible{
   outline:3px solid var(--gold-lit);outline-offset:2px;border-radius:4px;
 }
@@ -210,7 +215,7 @@ html{scroll-padding-top:64px}
 .topbar{
   position:fixed;top:0;left:0;right:0;z-index:80;
   background:rgba(11,12,14,.94);border-bottom:1px solid #2A3039;
-  display:flex;align-items:center;gap:.6rem;padding:.45rem .8rem;
+  display:flex;flex-direction:column;gap:.4rem;padding:.4rem .6rem;
 }
 @supports (backdrop-filter:blur(8px)) or (-webkit-backdrop-filter:blur(8px)){
   .topbar{
@@ -218,23 +223,34 @@ html{scroll-padding-top:64px}
     -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
   }
 }
-body{padding-top:56px}
-.tb-home{
-  font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;
-  font-size:.95rem;color:#FFB612;text-decoration:none;white-space:nowrap;padding:.35rem .1rem;
+body{padding-top:var(--topbar)}
+
+/* Three destinations, always visible, current one lit. On a phone they take a
+   row of their own above the jump menu; from 720px up it all fits on one line. */
+.tb-sites{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem}
+.tb-site{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  min-height:44px;padding:.4rem .3rem;border-radius:9px;
+  border:1px solid #2A3039;background:#15171B;color:#EDF0F3;text-decoration:none;
+  font-family:var(--display);text-transform:uppercase;letter-spacing:.03em;
+  font-size:clamp(.82rem,2.9vw,1rem);line-height:1.05;
 }
+.tb-site:hover{border-color:#FFB612;color:#FFB612}
+.tb-site.on{background:#FFB612;border-color:#FFB612;color:#0B0C0E;font-weight:700}
+.tb-site.on:hover{color:#0B0C0E;border-color:#FFB612}
+.tb-row2{display:flex;align-items:center;gap:.5rem}
 .tb-sel{
   flex:1;min-width:0;min-height:38px;background:#15171B;color:#EDF0F3;
   border:1px solid #2A3039;border-radius:8px;
   font-family:var(--mono);font-size:.78rem;padding:.35rem .5rem;
 }
-.tb-back{
-  flex:none;min-height:38px;padding:.35rem .7rem;border-radius:8px;
-  border:1px solid #2A3039;background:#15171B;color:#EDF0F3;text-decoration:none;
-  font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
-  white-space:nowrap;display:flex;align-items:center;
+@media(min-width:720px){
+  .topbar{flex-direction:row;align-items:center;gap:.7rem;padding:.45rem .9rem}
+  .tb-sites{flex:none;grid-template-columns:repeat(3,auto)}
+  .tb-site{min-height:40px;padding:.4rem 1rem}
+  .tb-row2{flex:1;min-width:0}
 }
-.tb-sel:focus-visible,.tb-home:focus-visible,.tb-back:focus-visible{outline:3px solid #FFB612;outline-offset:2px}
+.tb-site:focus-visible,.tb-sel:focus-visible{outline:3px solid #FFB612;outline-offset:2px}
 
 /* ---------------- masthead ---------------- */
 .hero{background:#0B0C0E;color:#EDF0F3;position:relative;overflow:hidden;
@@ -666,23 +682,24 @@ button.byecell:hover{border-color:var(--gold-lit)}
 </style>
 
 <nav class="topbar" aria-label="Site">
-  <a class="tb-home" href="#top">Kale Mary</a>
-  <label class="sr" for="tbJump">Jump to a section</label>
-  <select class="tb-sel" id="tbJump">
-    <option value="">Jump to&hellip;</option>
-    <option value="#week">This week</option>
-    <option value="#starters">Your starters</option>
-    <option value="#bench">The bench</option>
-    <option value="#drill">Name that player</option>
-    <option value="#byes">Bye weeks</option>
-    <option value="#moves">When to make moves</option>
-    <option value="#sunday">Sunday watch list</option>
-    <optgroup label="Other pages">
-      <option value="index.html">The Playbook</option>
-      <option value="swan-dive.html">Swan Dive</option>
-    </optgroup>
-  </select>
-  <a class="tb-back" href="index.html">&larr; Playbook</a>
+  <div class="tb-sites">
+    <a class="tb-site" href="index.html">Playbook</a>
+    <a class="tb-site on" href="#top" aria-current="page">Kale Mary</a>
+    <a class="tb-site" href="swan-dive.html">Swan Dive</a>
+  </div>
+  <div class="tb-row2">
+    <label class="sr" for="tbJump">Jump to a section</label>
+    <select class="tb-sel" id="tbJump">
+        <option value="">Jump to&hellip;</option>
+        <option value="#week">This week</option>
+        <option value="#starters">Your starters</option>
+        <option value="#bench">The bench</option>
+        <option value="#drill">Name that player</option>
+        <option value="#byes">Bye weeks</option>
+        <option value="#moves">When to make moves</option>
+        <option value="#sunday">Sunday watch list</option>
+      </select>
+  </div>
 </nav>
 
 <main id="top">
