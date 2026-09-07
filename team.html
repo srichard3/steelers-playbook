@@ -179,6 +179,10 @@ button{
   -webkit-appearance:none;appearance:none;
 }
 html{-webkit-tap-highlight-color:rgba(255,182,18,.22)}
+/* the topbar is fixed at 56px, so anchors and the jump menu would otherwise
+   land with the section heading hidden underneath it */
+html{scroll-padding-top:64px}
+[id]{scroll-margin-top:64px}
 :where(a,button,input,[tabindex]):focus-visible{
   outline:3px solid var(--gold-lit);outline-offset:2px;border-radius:4px;
 }
@@ -556,36 +560,6 @@ button.byecell:hover{border-color:var(--gold-lit)}
 .byedetail .gap{border-left:3px solid var(--ore-lit);padding-left:.7rem}
 
 /* ============================================================
-   WHO DO I START -- side-by-side compare
-   ============================================================ */
-.cmp{display:flex;flex-direction:column;gap:.75rem}
-.cmp-pick{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
-.cmp-pick select{
-  width:100%;min-height:48px;border-radius:8px;border:1px solid var(--line);
-  background:var(--raise);color:var(--ink);font:inherit;font-size:.92rem;padding:.5rem .6rem;
-}
-.cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;align-items:start}
-.cmp-c{border:1px solid var(--line);border-radius:10px;background:var(--raise);
-  overflow:hidden;display:flex;flex-direction:column}
-.cmp-c.win{border-color:var(--gold-lit);box-shadow:inset 0 0 0 1px var(--gold-lit)}
-.cmp-shot{position:relative;width:100%;height:0;padding-top:70%;overflow:hidden;background:var(--sink)}
-.cmp-shot img{position:absolute;top:0;left:0;width:100%;height:100%;
-  object-fit:cover;object-position:50% 26%;display:block;filter:var(--photo-filter)}
-.cmp-b{padding:.7rem .8rem .85rem;display:flex;flex-direction:column;gap:.3rem}
-.cmp-nm{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;
-  font-size:clamp(.95rem,2.6vw,1.1rem);line-height:1.05}
-.cmp-meta{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
-.cmp-n{font-family:var(--display);font-size:2.1rem;line-height:.95;color:var(--blue);
-  font-variant-numeric:tabular-nums;margin-top:.2rem}
-.cmp-u{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
-.cmp-p{font-size:.85rem;color:var(--ink-2);line-height:1.5;margin-top:.2rem}
-.cmp-flag{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
-  color:#fff;background:var(--ore-lit);border-radius:4px;padding:.16rem .4rem;align-self:flex-start}
-.cmp-note{font-size:.9rem;color:var(--ink-2);line-height:1.55}
-.cmp-note b{color:var(--ink)}
-@media(max-width:520px){ .cmp-pick{grid-template-columns:1fr} }
-
-/* ============================================================
    TRADE OFFERS -- take it or pass
    ============================================================ */
 .tq{display:flex;flex-direction:column;gap:.7rem}
@@ -612,7 +586,7 @@ button.byecell:hover{border-color:var(--gold-lit)}
    means our dark background is dropped and near-white option text lands on
    Safari's light control. Reset it and draw our own chevron out of two
    gradients, so there is no asset to load. */
-.tb-sel,.cmp-pick select{
+.tb-sel{
   -webkit-appearance:none;appearance:none;
   background-image:
     linear-gradient(45deg,transparent 50%,currentColor 50%),
@@ -623,7 +597,56 @@ button.byecell:hover{border-color:var(--gold-lit)}
   padding-right:1.9rem;
   border-radius:8px;
 }
-.tb-sel::-ms-expand,.cmp-pick select::-ms-expand{display:none}
+.tb-sel::-ms-expand{display:none}
+
+/* ============================================================
+   THE MOVE FLOW -- the decision drawn out
+   A vertical spine of questions with the exits branching off it.
+   Pure CSS: no JS, no absolute positioning, nothing engine-specific.
+   ============================================================ */
+.flow{display:flex;flex-direction:column;margin:.5rem 0 .2rem;max-width:44rem}
+.fl-open{
+  border:1px solid var(--line);border-radius:10px;background:var(--sink);
+  padding:.8rem .9rem;font-size:.95rem;color:var(--ink);line-height:1.5;
+}
+.fl-pipe{width:2px;height:18px;background:var(--line);margin-left:1.35rem}
+.fl-q{
+  border:1px solid var(--line);border-left:4px solid var(--blue-lit);
+  border-radius:10px;background:var(--raise);padding:.75rem .9rem;
+  display:flex;gap:.6rem;align-items:baseline;
+}
+.fl-q .n{
+  flex:none;font-family:var(--mono);font-size:.7rem;font-weight:700;
+  color:var(--blue);letter-spacing:.06em;
+}
+.fl-q .t{font-size:.97rem;color:var(--ink);line-height:1.45;font-weight:650}
+/* the off-ramp: an answer that ends the decision */
+.fl-branch{margin-left:1.35rem;padding-left:1.1rem;border-left:2px solid var(--line)}
+/* the spine continuing to the next question */
+.fl-yes{
+  margin-left:1.35rem;padding:.4rem 0 .4rem 1.1rem;border-left:2px solid var(--line);
+  font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--turf);font-weight:700;
+}
+.fl-out{
+  margin-top:.5rem;border-radius:10px;padding:.7rem .85rem;border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:.2rem;
+}
+.fl-out .k{font-family:var(--mono);font-size:.65rem;letter-spacing:.14em;text-transform:uppercase}
+.fl-out .h{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;
+  font-size:1.05rem;line-height:1.1}
+.fl-out p{font-size:.88rem;line-height:1.5;color:var(--ink-2)}
+.fl-out.stop{background:var(--sink)}
+.fl-out.stop .k,.fl-out.stop .h{color:var(--ink-2)}
+.fl-out.wait{background:var(--gold-wash);border-color:var(--gold-lit)}
+.fl-out.wait .k,.fl-out.wait .h{color:var(--gold-ink)}
+.fl-out.wait p{color:var(--ink)}
+.fl-out.go{background:var(--turf-wash);border:2px solid var(--turf);margin-top:0}
+.fl-out.go .k,.fl-out.go .h{color:var(--turf)}
+.fl-out.go .h{font-size:1.25rem}
+.fl-out.go p{color:var(--ink)}
+.fl-foot{font-size:.9rem;color:var(--ink-2);line-height:1.55;margin-top:.8rem}
+.fl-foot b{color:var(--ink)}
 </style>
 
 <nav class="topbar" aria-label="Site">
@@ -636,7 +659,6 @@ button.byecell:hover{border-color:var(--gold-lit)}
     <option value="#bench">The bench</option>
     <option value="#drill">Name that player</option>
     <option value="#byes">Bye weeks</option>
-    <option value="#compare">Who do I start?</option>
     <option value="#moves">When to make moves</option>
     <option value="#sunday">Sunday watch list</option>
   </select>
@@ -765,19 +787,6 @@ button.byecell:hover{border-color:var(--gold-lit)}
   </div>
 </section>
 
-<section id="compare">
-  <div class="wrap stack-lg">
-    <div class="sec-head">
-      <p class="sec-num">The Sunday morning question</p>
-      <h2>Who do I start?</h2>
-      <p class="lede">Pick any two of your players and put them next to each
-        other. Most weeks the answer is obvious; the flex spot is the one that
-        will actually make you think.</p>
-    </div>
-    <div id="compareHost"></div>
-  </div>
-</section>
-
 <section id="moves">
   <div class="wrap stack-lg">
     <div class="sec-head">
@@ -801,6 +810,62 @@ button.byecell:hover{border-color:var(--gold-lit)}
         You do not have to be the fastest, you have to be early enough to be in
         the batch.</p>
     </div>
+
+    <div class="flow">
+      <div class="fl-open">Somebody on your roster gets hurt, or a player nobody
+        owns has a huge afternoon. This is the whole decision &mdash; and most
+        weeks it ends in the very first box.</div>
+      <div class="fl-pipe"></div>
+
+      <div class="fl-q"><span class="n">01</span><span class="t">Would he
+        actually start for you this week?</span></div>
+      <div class="fl-branch">
+        <div class="fl-out stop">
+          <span class="k">If no</span>
+          <span class="h">Do nothing</span>
+          <p>A player you would leave on your bench scores you zero either way.
+            That is never worth your place in the queue.</p>
+        </div>
+      </div>
+      <div class="fl-yes">If yes &darr;</div>
+
+      <div class="fl-q"><span class="n">02</span><span class="t">Do you already
+        own his cover?</span></div>
+      <div class="fl-branch">
+        <div class="fl-out stop">
+          <span class="k">If yes</span>
+          <span class="h">Do nothing</span>
+          <p>This is exactly what Brian Robinson Jr. and Mike Washington Jr. are
+            there for. Move one into the lineup and keep your priority.</p>
+        </div>
+      </div>
+      <div class="fl-yes">If no &darr;</div>
+
+      <div class="fl-q"><span class="n">03</span><span class="t">Is it a real
+        job, or one loud afternoon?</span></div>
+      <div class="fl-branch">
+        <div class="fl-out wait">
+          <span class="k">One good game</span>
+          <span class="h">Wait a week</span>
+          <p>A single big performance is usually noise. If he does it again he
+            will still be sitting there, and by then you will actually know.</p>
+        </div>
+      </div>
+      <div class="fl-yes">A real job &darr;</div>
+
+      <div class="fl-out go">
+        <span class="k">Tuesday evening</span>
+        <span class="h">Claim him</span>
+        <p>A starting job that has just changed hands is the one thing worth
+          dropping to the back of the queue for. Put the claim in before Tuesday
+          night and drop whoever is furthest down your bench.</p>
+      </div>
+    </div>
+
+    <p class="fl-foot">The honest answer is <b>do nothing</b> most weeks, and
+      that is not laziness. An unspent waiver priority is worth far more in
+      Week 10, when somebody's starting running back goes down, than a hunch is
+      worth in Week 3.</p>
 
     <div class="note blue">
       <span class="lbl">The three situations worth spending on</span>
@@ -1570,119 +1635,6 @@ function fillsSlot(p, slot){
 })();
 
 /* ============================================================
-   WHO DO I START -- two players, side by side
-   ============================================================ */
-(function(){
-  var host = $('compareHost');
-  if(!host) return;
-  if(PLAYERS.length < 2){ host.parentNode.parentNode.remove(); return; }
-
-  function goodDay(p){
-    var d = (p.days || [])[1] || (p.days || [])[0];
-    return d ? score(d.stats) : null;
-  }
-
-  var wrap = el('div','cmp');
-  var pick = el('div','cmp-pick');
-  var selA = document.createElement('select');
-  var selB = document.createElement('select');
-  selA.setAttribute('aria-label','First player to compare');
-  selB.setAttribute('aria-label','Second player to compare');
-  PLAYERS.forEach(function(p, i){
-    [selA, selB].forEach(function(sel){
-      var o = document.createElement('option');
-      o.value = String(i);
-      o.textContent = p.name + '  \u00b7  ' + p.pos + ', ' + p.teamShort;
-      sel.appendChild(o);
-    });
-  });
-  var flexIdx  = PLAYERS.findIndex ? PLAYERS.findIndex(function(p){ return p.role === 'flex'; }) : -1;
-  var benchIdx = -1;
-  for(var i=0;i<PLAYERS.length;i++){
-    if(PLAYERS[i].role === 'bench' && (PLAYERS[i].pos === 'WR' || PLAYERS[i].pos === 'RB')){ benchIdx = i; break; }
-  }
-  selA.value = String(flexIdx  >= 0 ? flexIdx  : 0);
-  selB.value = String(benchIdx >= 0 ? benchIdx : 1);
-  pick.appendChild(selA); pick.appendChild(selB);
-
-  var cols = el('div','cmp-cols');
-  var note = el('p','cmp-note');
-  wrap.appendChild(pick); wrap.appendChild(cols); wrap.appendChild(note);
-  host.appendChild(wrap);
-
-  function col(p, win){
-    var c = el('div','cmp-c' + (win ? ' win' : ''));
-    var shot = el('div','cmp-shot');
-    var pic = PIX[p.slug] || {};
-    if(pic.action){
-      var img = new Image();
-      img.src = pic.action; img.alt = p.name + '.'; img.loading = 'lazy';
-      shot.appendChild(img);
-    } else {
-      shot.appendChild(el('span','ph','<span class="big">' +
-        (p.number != null ? p.number : p.pos) + '</span>'));
-    }
-    c.appendChild(shot);
-    var b = el('div','cmp-b');
-    b.appendChild(el('div','cmp-nm', p.name));
-    b.appendChild(el('div','cmp-meta',
-      (p.role === 'flex' ? 'FLEX' : p.pos) + ' \u00b7 ' + p.teamShort + ' \u00b7 Bye ' + p.bye));
-    var g = goodDay(p);
-    if(g != null){
-      b.appendChild(el('div','cmp-n', g.toFixed(1)));
-      b.appendChild(el('div','cmp-u','points on a good day'));
-    }
-    if(p.weakness){
-      var w = p.weakness.split('. ')[0];
-      b.appendChild(el('p','cmp-p','<b>Risk:</b> ' + w + '.'));
-    }
-    c.appendChild(b);
-    return c;
-  }
-
-  function draw(){
-    var a = PLAYERS[+selA.value], bb = PLAYERS[+selB.value];
-    var ga = goodDay(a), gb = goodDay(bb);
-    cols.innerHTML = '';
-    if(a === bb){
-      note.innerHTML = 'Pick two different players.';
-      cols.appendChild(col(a, false));
-      return;
-    }
-    var gap = (ga != null && gb != null) ? Math.abs(ga - gb) : null;
-    var clear = gap != null && gap >= 2;      // inside two points is a coin flip, not a winner
-    cols.appendChild(col(a,  clear && ga > gb));
-    cols.appendChild(col(bb, clear && gb > ga));
-
-    var lines = [];
-    if(ga != null && gb != null){
-      var hi = ga >= gb ? a : bb, lo = ga >= gb ? bb : a;
-      var diff = gap.toFixed(1);
-      lines.push(!clear
-        ? '<b>This one is close.</b> ' + (gap < 0.5
-            ? 'There is essentially nothing between them on a good day.'
-            : 'There are about ' + diff + ' points between them on a good day, which is inside the margin of a single catch.') +
-          ' Start whoever is playing the weaker defence, or whoever you would rather watch.'
-        : '<b>' + hi.name + '</b> has the higher ceiling \u2014 about ' + diff +
-          ' points more than ' + lo.name + ' on a good day.');
-    }
-    var FLEXABLE = {RB:1, WR:1, TE:1};
-    if(a.pos !== bb.pos && a.role !== 'flex' && bb.role !== 'flex' &&
-       FLEXABLE[a.pos] && FLEXABLE[bb.pos]){
-      lines.push('These two play different positions, so most weeks you are not really choosing between them \u2014 you are filling the flex.');
-    }
-    if(a.bye === bb.bye){
-      lines.push('Careful: <b>they share a bye in Week ' + a.bye + '</b>, so neither one covers the other.');
-    }
-    lines.push('This compares what each can do at his best, not a prediction for this Sunday \u2014 the opponent still matters more than anything on this screen.');
-    note.innerHTML = lines.join(' ');
-  }
-  selA.addEventListener('change', draw);
-  selB.addEventListener('change', draw);
-  draw();
-})();
-
-/* ============================================================
    TRADE OFFERS -- take it or pass
    ============================================================ */
 (function(){
@@ -1770,7 +1722,7 @@ function fillsSlot(p, slot){
 
   var SKIP_TAG   = /^(BUTTON|SELECT|OPTION|H1|H2|H3|H4|SCRIPT|STYLE|NOSCRIPT)$/;
   var SKIP_CLASS = ['gl','lbl','k','sec-num','eyebrow','tw-k','tw-t','byewk','bye-chip',
-                    'byehint','statline','cmp-meta','cmp-nm','cmp-u','drill-top','drill-fb',
+                    'byehint','statline','drill-top','drill-fb',
                     'tq-ans','offer','n','u','v','tscene-ph'];
   var LIMIT = 2;
   var used  = {};

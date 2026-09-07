@@ -179,6 +179,10 @@ button{
   -webkit-appearance:none;appearance:none;
 }
 html{-webkit-tap-highlight-color:rgba(255,182,18,.22)}
+/* the topbar is fixed at 56px, so anchors and the jump menu would otherwise
+   land with the section heading hidden underneath it */
+html{scroll-padding-top:64px}
+[id]{scroll-margin-top:64px}
 :where(a,button,input,[tabindex]):focus-visible{
   outline:3px solid var(--gold-lit);outline-offset:2px;border-radius:4px;
 }
