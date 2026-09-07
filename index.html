@@ -3,15 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Steelers Playbook</title>
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0B0C0E">
+<meta name="color-scheme" content="light dark">
 <meta property="og:title" content="The Steelers Playbook">
 <meta property="og:description" content="Football, explained in order.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8F%88%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<title>The Steelers Playbook</title>
 <style>
 /* ================================================================
    THE STEELERS PLAYBOOK
@@ -30,6 +31,10 @@
 
 /* ---------------- TOKENS ---------------- */
 :root{
+  /* Safari paints its own chrome -- select popups, scrollbars, form controls --
+     and without color-scheme it paints them light on top of a dark page. */
+  color-scheme:light;
+
   /* LIGHT &mdash; bare root carries the complete palette */
   --ground:#E7EAEE;
   --raise:#F6F7F9;
@@ -64,6 +69,7 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
+    color-scheme:dark;
     --ground:#0B0C0E; --raise:#15171B; --sink:#1E2228;
     --line:#333940; --hair:#232830;
     --ink:#EDF0F3; --ink-2:#AFB7C0; --ink-3:#7B848E;
@@ -77,6 +83,7 @@
   }
 }
 :root[data-theme="dark"]{
+  color-scheme:dark;
   --ground:#0B0C0E; --raise:#15171B; --sink:#1E2228;
   --line:#333940; --hair:#232830;
   --ink:#EDF0F3; --ink-2:#AFB7C0; --ink-3:#7B848E;
@@ -164,7 +171,14 @@ figcaption b{color:var(--ink);font-weight:600}
 .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .scroller svg{display:block;height:auto}
 
-button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
+/* Safari keeps its own button chrome (rounded caps, gradient, its own font)
+   unless appearance is reset, and it flashes a grey box on every tap. This
+   page is now tap-heavy, so both are worth turning off explicitly. */
+button{
+  font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+}
+html{-webkit-tap-highlight-color:rgba(255,182,18,.22)}
 :where(a,button,input,[tabindex]):focus-visible{
   outline:3px solid var(--gold-lit);outline-offset:2px;border-radius:4px;
 }
@@ -191,8 +205,11 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
   background:rgba(11,12,14,.94);border-bottom:1px solid #2A3039;
   display:flex;align-items:center;gap:.6rem;padding:.45rem .8rem;
 }
-@supports (backdrop-filter:blur(8px)){
-  .topbar{background:rgba(11,12,14,.82);backdrop-filter:blur(8px)}
+@supports (backdrop-filter:blur(8px)) or (-webkit-backdrop-filter:blur(8px)){
+  .topbar{
+    background:rgba(11,12,14,.82);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  }
 }
 body{padding-top:56px}
 .tb-home{
@@ -892,6 +909,23 @@ footer p{font-size:.88rem;color:var(--ink-3)}
   font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;
   font-size:clamp(1.3rem,3.5vw,2rem);color:var(--gold-ink);
 }
+
+/* A <select> keeps Safari's native chrome unless appearance is reset, which
+   means our dark background is dropped and near-white option text lands on
+   Safari's light control. Reset it and draw our own chevron out of two
+   gradients, so there is no asset to load. */
+.tb-sel,.cmp-pick select{
+  -webkit-appearance:none;appearance:none;
+  background-image:
+    linear-gradient(45deg,transparent 50%,currentColor 50%),
+    linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:right 1rem center,right .68rem center;
+  background-size:5px 5px,5px 5px;
+  background-repeat:no-repeat;
+  padding-right:1.9rem;
+  border-radius:8px;
+}
+.tb-sel::-ms-expand,.cmp-pick select::-ms-expand{display:none}
 </style>
 
 <nav class="topbar" aria-label="Site">

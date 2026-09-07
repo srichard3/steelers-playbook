@@ -3,12 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your Fantasy Team</title>
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#0B0C0E">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Your Fantasy Team">
+<meta property="og:description" content="Every player on your team, and why to care.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8F%88%3C/text%3E%3C/svg%3E">
 </head>
 <body>
-<title>The Steelers Playbook</title>
 <style>
 /* ================================================================
    THE STEELERS PLAYBOOK
@@ -27,6 +31,10 @@
 
 /* ---------------- TOKENS ---------------- */
 :root{
+  /* Safari paints its own chrome -- select popups, scrollbars, form controls --
+     and without color-scheme it paints them light on top of a dark page. */
+  color-scheme:light;
+
   /* LIGHT &mdash; bare root carries the complete palette */
   --ground:#E7EAEE;
   --raise:#F6F7F9;
@@ -61,6 +69,7 @@
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
+    color-scheme:dark;
     --ground:#0B0C0E; --raise:#15171B; --sink:#1E2228;
     --line:#333940; --hair:#232830;
     --ink:#EDF0F3; --ink-2:#AFB7C0; --ink-3:#7B848E;
@@ -74,6 +83,7 @@
   }
 }
 :root[data-theme="dark"]{
+  color-scheme:dark;
   --ground:#0B0C0E; --raise:#15171B; --sink:#1E2228;
   --line:#333940; --hair:#232830;
   --ink:#EDF0F3; --ink-2:#AFB7C0; --ink-3:#7B848E;
@@ -161,7 +171,14 @@ figcaption b{color:var(--ink);font-weight:600}
 .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .scroller svg{display:block;height:auto}
 
-button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
+/* Safari keeps its own button chrome (rounded caps, gradient, its own font)
+   unless appearance is reset, and it flashes a grey box on every tap. This
+   page is now tap-heavy, so both are worth turning off explicitly. */
+button{
+  font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+}
+html{-webkit-tap-highlight-color:rgba(255,182,18,.22)}
 :where(a,button,input,[tabindex]):focus-visible{
   outline:3px solid var(--gold-lit);outline-offset:2px;border-radius:4px;
 }
@@ -191,8 +208,11 @@ button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
   background:rgba(11,12,14,.94);border-bottom:1px solid #2A3039;
   display:flex;align-items:center;gap:.6rem;padding:.45rem .8rem;
 }
-@supports (backdrop-filter:blur(8px)){
-  .topbar{background:rgba(11,12,14,.82);backdrop-filter:blur(8px)}
+@supports (backdrop-filter:blur(8px)) or (-webkit-backdrop-filter:blur(8px)){
+  .topbar{
+    background:rgba(11,12,14,.82);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  }
 }
 body{padding-top:56px}
 .tb-home{
@@ -356,8 +376,12 @@ body{padding-top:56px}
 }
 .byecell{
   border:1px solid var(--line);border-radius:8px;background:var(--raise);
-  padding:.55rem .7rem;display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;min-height:44px;
+  padding:.55rem .7rem;min-height:44px;display:block;
 }
+/* Safari has never laid a <button> out as a flex container reliably -- its
+   children get wrapped in an anonymous block first. Keep the button a plain
+   block and put the flex on a span inside it. */
+.byecell-in{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;width:100%}
 .byecell.warn{border-color:var(--gold-lit);background:var(--gold-wash)}
 .byecell.bad{border-color:var(--ore-lit);background:var(--ore-wash)}
 .byecell.empty{opacity:.45}
@@ -424,6 +448,13 @@ body{padding-top:56px}
   display:block;max-width:100%;max-height:clamp(380px,72vh,720px);width:auto;height:auto;
   border:1px solid var(--line);border-radius:var(--r);filter:var(--photo-filter);
 }
+/* iOS Safari resolves vh against the LARGE viewport (URL bar hidden), so a
+   72vh image can overflow the screen while the bar is showing. svh is the
+   visible height; fall back to vh where it is unsupported. */
+@supports (height:1svh){
+  .tscene-img img{max-height:clamp(380px,72svh,720px)}
+}
+
 /* only the empty placeholder needs a fixed box to fill */
 .tscene-img.empty{display:block;height:0;padding-top:var(--ratio,56.25%);
   overflow:hidden;background:var(--sink);border:1px solid var(--line);border-radius:var(--r)}
@@ -576,6 +607,23 @@ button.byecell:hover{border-color:var(--gold-lit)}
   text-transform:uppercase;color:var(--turf);margin-bottom:.25rem}
 .tq-ans.pass{border-left-color:var(--ore-lit)}
 .tq-ans.pass .v{color:var(--ore)}
+
+/* A <select> keeps Safari's native chrome unless appearance is reset, which
+   means our dark background is dropped and near-white option text lands on
+   Safari's light control. Reset it and draw our own chevron out of two
+   gradients, so there is no asset to load. */
+.tb-sel,.cmp-pick select{
+  -webkit-appearance:none;appearance:none;
+  background-image:
+    linear-gradient(45deg,transparent 50%,currentColor 50%),
+    linear-gradient(135deg,currentColor 50%,transparent 50%);
+  background-position:right 1rem center,right .68rem center;
+  background-size:5px 5px,5px 5px;
+  background-repeat:no-repeat;
+  padding-right:1.9rem;
+  border-radius:8px;
+}
+.tb-sel::-ms-expand,.cmp-pick select::-ms-expand{display:none}
 </style>
 
 <nav class="topbar" aria-label="Site">
@@ -1260,24 +1308,27 @@ function fillsSlot(p, slot){
 
     var cell, det = null;
 
+    var inner = el('span','byecell-in');
     if(!out.length){
       cell = el('div', cellCls);
-      cell.appendChild(el('span','none','Nobody out \u2014 full lineup'));
+      inner.appendChild(el('span','none','Nobody out \u2014 full lineup'));
+      cell.appendChild(inner);
     } else {
       cell = el('button', cellCls);
       cell.type = 'button';
       cell.setAttribute('aria-expanded','false');
       out.forEach(function(p){
-        cell.appendChild(el('span','bye-chip' + (p.role !== 'bench' ? ' start' : ''),
+        inner.appendChild(el('span','bye-chip' + (p.role !== 'bench' ? ' start' : ''),
           p.name.split(' ').slice(-1)[0] + ' (' + slotOf(p) + ')'));
       });
       if(starters.length >= 2){
-        cell.appendChild(el('span','verdict',
+        inner.appendChild(el('span','verdict',
           starters.length >= 3
             ? 'Three starters out at once. Plan this one a week ahead.'
             : 'Two starters out. You will need help from waivers.'));
       }
-      cell.appendChild(el('span','byehint','Tap for what to do'));
+      inner.appendChild(el('span','byehint','Tap for what to do'));
+      cell.appendChild(inner);
 
       /* ---- the panel ---- */
       det = el('div','byedetail');
