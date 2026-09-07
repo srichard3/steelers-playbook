@@ -438,6 +438,144 @@ body{padding-top:56px}
 .tscene-ph .f{font-family:var(--mono);font-size:.74rem;color:var(--ink-3)}
 /* on the dark sign-off the caption needs light text */
 .signoff .tscene-cap{color:#AFB7C0}
+
+/* ============================================================
+   NAME THAT PLAYER -- recall drill
+   ============================================================ */
+.drill{border:1px solid var(--line);border-radius:var(--r);background:var(--raise);overflow:hidden}
+.drill-top{
+  display:flex;align-items:center;justify-content:space-between;gap:.6rem;
+  padding:.6rem .9rem;background:var(--sink);
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3);
+}
+.drill-top b{color:var(--ink)}
+.drill-shot{position:relative;width:100%;height:0;padding-top:62%;overflow:hidden;background:var(--sink)}
+.drill-shot img{position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 28%;display:block;filter:var(--photo-filter)}
+.drill-body{padding:.85rem .9rem 1rem;display:flex;flex-direction:column;gap:.6rem}
+.drill-opts{display:flex;flex-direction:column;gap:.45rem}
+.drill-opt{
+  min-height:50px;border-radius:8px;border:1px solid var(--line);background:var(--ground);
+  color:var(--ink);font:inherit;font-size:1rem;font-weight:650;padding:.6rem .85rem;
+  text-align:left;cursor:pointer;
+}
+.drill-opt:hover:not(:disabled){border-color:var(--gold-lit)}
+.drill-opt:disabled{cursor:default}
+.drill-opt.right{background:var(--turf-wash);border:2px solid var(--turf);color:var(--ink)}
+.drill-opt.wrong{background:var(--ore-wash);border:2px solid var(--ore-lit);color:var(--ink)}
+.drill-opt.right::after{content:" \2713";color:var(--turf);font-weight:800}
+.drill-opt.wrong::after{content:" \2715";color:var(--ore);font-weight:800}
+.drill-fb{font-size:.92rem;color:var(--ink-2);line-height:1.55}
+.drill-fb b{color:var(--ink)}
+.drill-fb[hidden]{display:none}
+.drill-go{
+  align-self:flex-start;min-height:46px;border-radius:8px;border:1px solid var(--gold-lit);
+  background:var(--gold-lit);color:#14171B;font:inherit;font-weight:700;padding:.55rem 1.1rem;cursor:pointer;
+}
+.drill-go[hidden]{display:none}
+.drill-done{padding:1.2rem;display:flex;flex-direction:column;gap:.55rem;align-items:flex-start}
+.drill-done .n{font-family:var(--display);font-size:3.2rem;line-height:.9;color:var(--blue);
+  font-variant-numeric:tabular-nums}
+.drill-done p{font-size:.95rem;color:var(--ink-2);line-height:1.55}
+
+/* ============================================================
+   GLOSSARY -- tap a term, get a definition
+   ============================================================ */
+.gl{
+  background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer;
+  border-bottom:1px dashed var(--gold-ink);
+}
+.gl::after{content:"?";font-size:.6em;vertical-align:super;color:var(--gold-ink);
+  margin-left:1px;font-weight:700;font-family:var(--mono)}
+.gl:hover,.gl.on{color:var(--gold-ink);border-bottom-style:solid}
+/* The definition opens inline, directly under the sentence she is reading,
+   rather than in a fixed sheet at the bottom of the screen. No fixed
+   positioning, no transforms -- and she never loses her place. */
+.gl-def{
+  border-left:3px solid var(--gold-lit);border-radius:8px;
+  background:var(--gold-wash);padding:.75rem .9rem;margin:.6rem 0;
+  display:flex;flex-direction:column;gap:.25rem;
+}
+.gl-def .t{
+  font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gold-ink);
+}
+.gl-def p{font-size:.93rem;color:var(--ink);line-height:1.55}
+
+/* ============================================================
+   BYE WEEKS -- tap a row to see what it actually does to you
+   ============================================================ */
+.byecol{display:flex;flex-direction:column;gap:.4rem;min-width:0}
+button.byecell{width:100%;font:inherit;text-align:left;cursor:pointer}
+button.byecell:hover{border-color:var(--gold-lit)}
+.byehint{
+  width:100%;font-family:var(--mono);font-size:.65rem;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:.15rem;
+}
+.byedetail{
+  border:1px solid var(--line);border-left:3px solid var(--gold-lit);border-radius:8px;
+  background:var(--ground);padding:.75rem .9rem;display:flex;flex-direction:column;gap:.55rem;
+}
+.byedetail[hidden]{display:none}
+.byedetail .k{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:.2rem}
+.byedetail p{font-size:.9rem;color:var(--ink-2);line-height:1.55}
+.byedetail b{color:var(--ink)}
+.byedetail .fix{border-left:3px solid var(--turf);padding-left:.7rem}
+.byedetail .gap{border-left:3px solid var(--ore-lit);padding-left:.7rem}
+
+/* ============================================================
+   WHO DO I START -- side-by-side compare
+   ============================================================ */
+.cmp{display:flex;flex-direction:column;gap:.75rem}
+.cmp-pick{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.cmp-pick select{
+  width:100%;min-height:48px;border-radius:8px;border:1px solid var(--line);
+  background:var(--raise);color:var(--ink);font:inherit;font-size:.92rem;padding:.5rem .6rem;
+}
+.cmp-cols{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;align-items:start}
+.cmp-c{border:1px solid var(--line);border-radius:10px;background:var(--raise);
+  overflow:hidden;display:flex;flex-direction:column}
+.cmp-c.win{border-color:var(--gold-lit);box-shadow:inset 0 0 0 1px var(--gold-lit)}
+.cmp-shot{position:relative;width:100%;height:0;padding-top:70%;overflow:hidden;background:var(--sink)}
+.cmp-shot img{position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;object-position:50% 26%;display:block;filter:var(--photo-filter)}
+.cmp-b{padding:.7rem .8rem .85rem;display:flex;flex-direction:column;gap:.3rem}
+.cmp-nm{font-family:var(--display);text-transform:uppercase;letter-spacing:.02em;
+  font-size:clamp(.95rem,2.6vw,1.1rem);line-height:1.05}
+.cmp-meta{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.cmp-n{font-family:var(--display);font-size:2.1rem;line-height:.95;color:var(--blue);
+  font-variant-numeric:tabular-nums;margin-top:.2rem}
+.cmp-u{font-family:var(--mono);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+.cmp-p{font-size:.85rem;color:var(--ink-2);line-height:1.5;margin-top:.2rem}
+.cmp-flag{font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#fff;background:var(--ore-lit);border-radius:4px;padding:.16rem .4rem;align-self:flex-start}
+.cmp-note{font-size:.9rem;color:var(--ink-2);line-height:1.55}
+.cmp-note b{color:var(--ink)}
+@media(max-width:520px){ .cmp-pick{grid-template-columns:1fr} }
+
+/* ============================================================
+   TRADE OFFERS -- take it or pass
+   ============================================================ */
+.tq{display:flex;flex-direction:column;gap:.7rem}
+.tqi{border:1px solid var(--line);border-radius:10px;background:var(--raise);
+  padding:.85rem .9rem;display:flex;flex-direction:column;gap:.55rem}
+.tqi .offer{font-size:.95rem;color:var(--ink);line-height:1.55}
+.tq-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+.tq-btn{
+  flex:1;min-width:118px;min-height:46px;border-radius:8px;border:1px solid var(--line);
+  background:var(--ground);color:var(--ink);font:inherit;font-weight:650;padding:.5rem .8rem;cursor:pointer;
+}
+.tq-btn:hover:not(:disabled){border-color:var(--gold-lit)}
+.tq-btn.sel{background:var(--gold-lit);border-color:var(--gold-lit);color:#14171B;font-weight:700}
+.tq-btn:disabled{cursor:default}
+.tq-ans{font-size:.9rem;color:var(--ink-2);line-height:1.6;
+  border-left:3px solid var(--turf);padding-left:.85rem}
+.tq-ans[hidden]{display:none}
+.tq-ans .v{display:block;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--turf);margin-bottom:.25rem}
+.tq-ans.pass{border-left-color:var(--ore-lit)}
+.tq-ans.pass .v{color:var(--ore)}
 </style>
 
 <nav class="topbar" aria-label="Site">
@@ -448,7 +586,9 @@ body{padding-top:56px}
     <option value="#week">This week</option>
     <option value="#starters">Your starters</option>
     <option value="#bench">The bench</option>
+    <option value="#drill">Name that player</option>
     <option value="#byes">Bye weeks</option>
+    <option value="#compare">Who do I start?</option>
     <option value="#moves">When to make moves</option>
     <option value="#sunday">Sunday watch list</option>
   </select>
@@ -523,6 +663,19 @@ body{padding-top:56px}
   </div>
 </section>
 
+<section id="drill">
+  <div class="wrap stack-lg">
+    <div class="sec-head">
+      <p class="sec-num">Five minutes, no stakes</p>
+      <h2>Name that player</h2>
+      <p class="lede">Eight photos, three names each. Reading about sixteen people
+        is how you forget them; being asked to name them is how they stick. Nobody
+        is watching and it does not count for anything.</p>
+    </div>
+    <div id="drillHost"></div>
+  </div>
+</section>
+
 <section id="byes">
   <div class="wrap stack-lg">
     <div class="sec-head">
@@ -533,16 +686,24 @@ body{padding-top:56px}
         lose a week they should have won.</p>
     </div>
 
+    <p class="lede" style="font-size:.95rem">Tap any week to see exactly what it
+      does to your lineup &mdash; who is out, which slots go empty, and who you
+      already own who can cover.</p>
+
     <div class="byemap" id="byeMap"></div>
 
     <div class="note ore">
       <span class="lbl">The one that will hurt</span>
       <p><strong>Week 13.</strong> Baltimore and Las Vegas are both off, which
         takes out Lamar Jackson, Zay Flowers and Ashton Jeanty in one go &mdash;
-        your quarterback, a starting receiver and a starting running back. Trevor
-        Lawrence steps in at quarterback, which is exactly why he is on your
-        bench. The other two spots you will have to fill off waivers, and you
-        should do it a week early rather than on the Sunday morning.</p>
+        your quarterback, a starting receiver and a starting running back.</p>
+      <p>You can technically cover all three from your own bench: Trevor Lawrence
+        at quarterback, which is exactly why he is there, Brian Robinson Jr. at
+        running back and Michael Pittman Jr. at receiver. <strong>So you are not
+        in trouble &mdash; you are in for a downgrade.</strong> Your bench empties
+        out and three of your nine spots get noticeably worse in the same week.
+        That is the week to go looking on waivers for something better, and to do
+        it the Tuesday before rather than on the Sunday morning.</p>
     </div>
 
     <div class="note">
@@ -553,6 +714,19 @@ body{padding-top:56px}
         backup protects you when someone gets hurt. It can never cover a bye,
         because he is sitting at home that week too.</p>
     </div>
+  </div>
+</section>
+
+<section id="compare">
+  <div class="wrap stack-lg">
+    <div class="sec-head">
+      <p class="sec-num">The Sunday morning question</p>
+      <h2>Who do I start?</h2>
+      <p class="lede">Pick any two of your players and put them next to each
+        other. Most weeks the answer is obvious; the flex spot is the one that
+        will actually make you think.</p>
+    </div>
+    <div id="compareHost"></div>
   </div>
 </section>
 
@@ -647,6 +821,39 @@ body{padding-top:56px}
         are slightly better than away teams. And a defense playing an offense that
         struggles to score is worth far more than a famous defense playing a good
         one &mdash; the opponent matters more than the name.</p>
+    </div>
+
+    <h3 style="margin-top:1.6rem">Trading</h3>
+
+    <div class="stack">
+      <p>A trade is just two managers swapping players, both agreeing, no waiver
+        position spent. Most people in a ten-team league make one or two all
+        season, and plenty make none, so there is no obligation here at all.</p>
+      <p><strong>There is really only one rule: trade from surplus to fix a
+        hole.</strong> You start two running backs and a flex, and you own five
+        running backs. Three of them cannot play for you in a normal week. That is
+        surplus, and surplus sitting on a bench is worth nothing &mdash; a bench
+        player scores you exactly zero points.</p>
+      <p><strong>But not all of your surplus is spare.</strong> Brian Robinson Jr.
+        and Mike Washington Jr. are insurance on Bijan and Jeanty, and insurance is
+        worth keeping. <strong>Jonathon Brooks is the one who is genuinely
+        spare</strong> &mdash; he backs up nobody you own. If you ever trade
+        anyone, it should probably be him.</p>
+      <p><strong>How to make an offer somebody accepts.</strong> Say what you want
+        and why it helps them, in one message: &ldquo;You are thin at running back
+        and I have four. Brooks for one of your receivers?&rdquo; Do not lowball,
+        do not send five offers in a day, and expect most of them to be declined.
+        That is normal and it is not personal.</p>
+      <p><strong>And do not trade in a mood.</strong> The two worst moments to
+        make a deal are straight after a bad week, when you want to do
+        <em>something</em>, and straight after a good one, when you feel
+        untouchable. The trade deadline is usually around Week 11, so
+        there is no rush.</p>
+    </div>
+
+    <div class="stack">
+      <p class="sec-num" style="margin-bottom:.2rem">Three offers &mdash; what would you do?</p>
+      <div class="tq" id="tradeQuiz"></div>
     </div>
 
     <div class="note ore">
@@ -1024,25 +1231,45 @@ function card(p, isBench){
 })();
 
 /* ============================================================
-   BYE MAP
+   BYE MAP -- tappable. A list of names does not tell you what a
+   bye actually costs; the panel works out the holes and checks
+   the bench for cover before sending her to waivers.
    ============================================================ */
+function slotOf(p){ return p.role === 'flex' ? 'FLEX' : p.pos; }
+var SLOT_WORD = {QB:'quarterback', RB:'running back', WR:'receiver', TE:'tight end',
+                 FLEX:'flex spot', K:'kicker', 'D/ST':'defence'};
+function slotWord(slot){ return SLOT_WORD[slot] || slot; }
+function fillsSlot(p, slot){
+  if(slot === 'FLEX') return p.pos === 'RB' || p.pos === 'WR' || p.pos === 'TE';
+  return p.pos === slot;
+}
 (function(){
   var host = $('byeMap');
   if(!host) return;
   var weeks = [5,6,7,8,9,10,11,13,14];   // no byes in week 12
+
   weeks.forEach(function(wk){
-    var out = PLAYERS.filter(function(p){ return p.bye === wk; });
+    var out      = PLAYERS.filter(function(p){ return p.bye === wk; });
     var starters = out.filter(function(p){ return p.role !== 'bench'; });
     var row = el('div','byerow');
     row.appendChild(el('div','byewk','Week ' + wk));
-    var cellCls = 'byecell' + (starters.length >= 3 ? ' bad' : starters.length === 2 ? ' warn' : out.length ? '' : ' empty');
-    var cell = el('div', cellCls);
+    var col = el('div','byecol');
+
+    var cellCls = 'byecell' +
+      (starters.length >= 3 ? ' bad' : starters.length === 2 ? ' warn' : out.length ? '' : ' empty');
+
+    var cell, det = null;
+
     if(!out.length){
+      cell = el('div', cellCls);
       cell.appendChild(el('span','none','Nobody out \u2014 full lineup'));
     } else {
+      cell = el('button', cellCls);
+      cell.type = 'button';
+      cell.setAttribute('aria-expanded','false');
       out.forEach(function(p){
         cell.appendChild(el('span','bye-chip' + (p.role !== 'bench' ? ' start' : ''),
-          p.name.split(' ').slice(-1)[0] + ' (' + (p.role === 'flex' ? 'FLEX' : p.pos) + ')'));
+          p.name.split(' ').slice(-1)[0] + ' (' + slotOf(p) + ')'));
       });
       if(starters.length >= 2){
         cell.appendChild(el('span','verdict',
@@ -1050,8 +1277,92 @@ function card(p, isBench){
             ? 'Three starters out at once. Plan this one a week ahead.'
             : 'Two starters out. You will need help from waivers.'));
       }
+      cell.appendChild(el('span','byehint','Tap for what to do'));
+
+      /* ---- the panel ---- */
+      det = el('div','byedetail');
+      det.hidden = true;
+
+      var sit = el('div');
+      sit.appendChild(el('span','k','Out this week'));
+      sit.appendChild(el('p', null, out.map(function(p){
+        return '<b>' + p.name + '</b> (' + slotOf(p) +
+               (p.role === 'bench' ? ', bench' : '') + ')';
+      }).join(', ') + '.'));
+      det.appendChild(sit);
+
+      if(!starters.length){
+        var okb = el('div','fix');
+        okb.appendChild(el('span','k','What it costs you'));
+        okb.appendChild(el('p', null,
+          'Nothing. Only bench players are off this week, and bench players score ' +
+          'you zero anyway. Set your usual lineup.'));
+        det.appendChild(okb);
+      } else {
+        /* which bench bodies are actually available that week */
+        var free = PLAYERS.filter(function(p){
+          return p.role === 'bench' && p.bye !== wk;
+        });
+        var covered = [], gaps = [];
+        starters.forEach(function(p){
+          var slot = slotOf(p);
+          var idx = -1;
+          for(var i=0;i<free.length;i++){ if(fillsSlot(free[i], slot)){ idx = i; break; } }
+          if(idx >= 0){
+            covered.push({slot:slot, gone:p, sub:free[idx]});
+            free.splice(idx,1);
+          } else {
+            gaps.push({slot:slot, gone:p});
+          }
+        });
+
+        var need = el('div');
+        need.appendChild(el('span','k','Slots that go empty'));
+        need.appendChild(el('p', null, starters.map(function(p){
+          return '<b>' + slotWord(slotOf(p)) + '</b>';
+        }).join(', ') + '.'));
+        det.appendChild(need);
+
+        if(covered.length){
+          var c = el('div','fix');
+          c.appendChild(el('span','k','You already own the cover'));
+          c.appendChild(el('p', null, covered.map(function(x){
+            return '<b>' + x.sub.name + '</b> slides in at ' + slotWord(x.slot) +
+                   ' for ' + x.gone.name.split(' ')[0] + '.';
+          }).join(' ')));
+          det.appendChild(c);
+        }
+        if(gaps.length){
+          var g = el('div','gap');
+          g.appendChild(el('span','k','You will need waivers'));
+          g.appendChild(el('p', null,
+            'Your ' + gaps.map(function(x){ return '<b>' + slotWord(x.slot) + '</b>'; }).join(' and ') +
+            (gaps.length > 1 ? ' slots have nobody on your bench who can fill them.'
+                             : ' slot has nobody on your bench who can fill it.') +
+            ' Put a claim in the Tuesday before, not on the Sunday morning.'));
+          det.appendChild(g);
+        }
+        if(!gaps.length){
+          var n = el('div','fix');
+          n.appendChild(el('span','k','Can you cover it yourself?'));
+          n.appendChild(el('p', null,
+            'You can field a legal lineup from your own bench, so nothing is forced ' +
+            'on you. Whether those replacements are <em>good enough</em> is a separate ' +
+            'question \u2014 look at what is on waivers before you settle for them.'));
+          det.appendChild(n);
+        }
+      }
+
+      cell.addEventListener('click', function(){
+        var open = !det.hidden;
+        det.hidden = open;
+        cell.setAttribute('aria-expanded', open ? 'false' : 'true');
+      });
     }
-    row.appendChild(cell);
+
+    col.appendChild(cell);
+    if(det) col.appendChild(det);
+    row.appendChild(col);
     host.appendChild(row);
   });
 })();
@@ -1083,6 +1394,431 @@ function card(p, isBench){
       host.appendChild(c);
     });
 })();
+
+
+/* ============================================================
+   NAME THAT PLAYER
+   Reading sixteen bios is recognition; being asked to name a
+   face is recall, and only one of those survives to Sunday.
+   ============================================================ */
+(function(){
+  var host = $('drillHost');
+  if(!host) return;
+  var pool = PLAYERS.filter(function(p){ return (PIX[p.slug] || {}).action; });
+  if(pool.length < 4){ host.parentNode.parentNode.remove(); return; }
+
+  var ROUNDS = Math.min(8, pool.length);
+  var qs, at, right;
+
+  function shuffle(a){
+    a = a.slice();
+    for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function hook(p){
+    var t = p.drama || p.context || '';
+    if(t.length > 150){
+      t = t.slice(0,150);
+      t = t.slice(0, t.lastIndexOf(' ')) + '\u2026';
+    }
+    return t;
+  }
+  function build(){
+    qs = shuffle(pool).slice(0, ROUNDS).map(function(p){
+      var same  = pool.filter(function(q){ return q.slug !== p.slug && q.pos === p.pos; });
+      var other = pool.filter(function(q){ return q.slug !== p.slug && q.pos !== p.pos; });
+      var wrong = shuffle(same).slice(0,2);
+      wrong = wrong.concat(shuffle(other).slice(0, 2 - wrong.length));
+      return {p:p, opts: shuffle([p].concat(wrong))};
+    });
+    at = 0; right = 0;
+    render();
+  }
+
+  function render(){
+    host.innerHTML = '';
+    if(at >= qs.length) return finish();
+    var q = qs[at];
+
+    var box = el('div','drill');
+    var top = el('div','drill-top');
+    top.appendChild(el('span', null, 'Question <b>' + (at+1) + '</b> of ' + qs.length));
+    top.appendChild(el('span', null, 'Right so far <b>' + right + '</b>'));
+    box.appendChild(top);
+
+    var shot = el('div','drill-shot');
+    var img = new Image();
+    img.src = PIX[q.p.slug].action;
+    img.alt = 'One of your players. Can you name him?';
+    shot.appendChild(img);
+    box.appendChild(shot);
+
+    var body = el('div','drill-body');
+    var opts = el('div','drill-opts');
+    var fb   = el('p','drill-fb'); fb.hidden = true;
+    var next = el('button','drill-go', at === qs.length - 1 ? 'See how you did' : 'Next player');
+    next.type = 'button'; next.hidden = true;
+    next.addEventListener('click', function(){ at++; render(); });
+
+    q.opts.forEach(function(o){
+      var b = el('button','drill-opt', o.name);
+      b.type = 'button';
+      b.addEventListener('click', function(){
+        Array.prototype.forEach.call(opts.children, function(c){ c.disabled = true; });
+        var ok = o.slug === q.p.slug;
+        if(ok){ right++; b.classList.add('right'); }
+        else {
+          b.classList.add('wrong');
+          Array.prototype.forEach.call(opts.children, function(c){
+            if(c.textContent === q.p.name) c.classList.add('right');
+          });
+        }
+        fb.innerHTML = (ok ? 'Yes, that\u2019s ' : 'Not quite \u2014 that was ') +
+          '<b>' + q.p.name + '</b>. ' + q.p.posLong + ', ' + q.p.team +
+          ', bye week ' + q.p.bye + '. ' + hook(q.p);
+        fb.hidden = false;
+        next.hidden = false;
+        next.focus();
+      });
+      opts.appendChild(b);
+    });
+
+    body.appendChild(opts);
+    body.appendChild(fb);
+    body.appendChild(next);
+    box.appendChild(body);
+    host.appendChild(box);
+  }
+
+  function finish(){
+    var best = store.get('drillBest', 0);
+    var isBest = right > best;
+    if(isBest) store.set('drillBest', right);
+
+    var box = el('div','drill');
+    var d = el('div','drill-done');
+    d.appendChild(el('div','n', right + ' / ' + qs.length));
+    var msg;
+    if(right === qs.length)      msg = 'All of them. You know your own team better than most people in your league know theirs.';
+    else if(right >= qs.length-2) msg = 'That is genuinely good. The ones you missed are the ones worth a second look.';
+    else if(right >= qs.length/2) msg = 'Solid for a first go. Run it again \u2014 it gets quicker fast.';
+    else                          msg = 'Nobody gets these first time. Scroll back up, tap through a few cards, then come back.';
+    d.appendChild(el('p', null, msg));
+    if(isBest && best > 0) d.appendChild(el('p', null, 'That is a new best, up from ' + best + '.'));
+    else if(best > 0)      d.appendChild(el('p', null, 'Your best so far is ' + best + '.'));
+    var again = el('button','drill-go','Play again');
+    again.type = 'button';
+    again.addEventListener('click', build);
+    d.appendChild(again);
+    box.appendChild(d);
+    host.innerHTML = '';
+    host.appendChild(box);
+  }
+
+  build();
+})();
+
+/* ============================================================
+   WHO DO I START -- two players, side by side
+   ============================================================ */
+(function(){
+  var host = $('compareHost');
+  if(!host) return;
+  if(PLAYERS.length < 2){ host.parentNode.parentNode.remove(); return; }
+
+  function goodDay(p){
+    var d = (p.days || [])[1] || (p.days || [])[0];
+    return d ? score(d.stats) : null;
+  }
+
+  var wrap = el('div','cmp');
+  var pick = el('div','cmp-pick');
+  var selA = document.createElement('select');
+  var selB = document.createElement('select');
+  selA.setAttribute('aria-label','First player to compare');
+  selB.setAttribute('aria-label','Second player to compare');
+  PLAYERS.forEach(function(p, i){
+    [selA, selB].forEach(function(sel){
+      var o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = p.name + '  \u00b7  ' + p.pos + ', ' + p.teamShort;
+      sel.appendChild(o);
+    });
+  });
+  var flexIdx  = PLAYERS.findIndex ? PLAYERS.findIndex(function(p){ return p.role === 'flex'; }) : -1;
+  var benchIdx = -1;
+  for(var i=0;i<PLAYERS.length;i++){
+    if(PLAYERS[i].role === 'bench' && (PLAYERS[i].pos === 'WR' || PLAYERS[i].pos === 'RB')){ benchIdx = i; break; }
+  }
+  selA.value = String(flexIdx  >= 0 ? flexIdx  : 0);
+  selB.value = String(benchIdx >= 0 ? benchIdx : 1);
+  pick.appendChild(selA); pick.appendChild(selB);
+
+  var cols = el('div','cmp-cols');
+  var note = el('p','cmp-note');
+  wrap.appendChild(pick); wrap.appendChild(cols); wrap.appendChild(note);
+  host.appendChild(wrap);
+
+  function col(p, win){
+    var c = el('div','cmp-c' + (win ? ' win' : ''));
+    var shot = el('div','cmp-shot');
+    var pic = PIX[p.slug] || {};
+    if(pic.action){
+      var img = new Image();
+      img.src = pic.action; img.alt = p.name + '.'; img.loading = 'lazy';
+      shot.appendChild(img);
+    } else {
+      shot.appendChild(el('span','ph','<span class="big">' +
+        (p.number != null ? p.number : p.pos) + '</span>'));
+    }
+    c.appendChild(shot);
+    var b = el('div','cmp-b');
+    b.appendChild(el('div','cmp-nm', p.name));
+    b.appendChild(el('div','cmp-meta',
+      (p.role === 'flex' ? 'FLEX' : p.pos) + ' \u00b7 ' + p.teamShort + ' \u00b7 Bye ' + p.bye));
+    var g = goodDay(p);
+    if(g != null){
+      b.appendChild(el('div','cmp-n', g.toFixed(1)));
+      b.appendChild(el('div','cmp-u','points on a good day'));
+    }
+    if(p.weakness){
+      var w = p.weakness.split('. ')[0];
+      b.appendChild(el('p','cmp-p','<b>Risk:</b> ' + w + '.'));
+    }
+    c.appendChild(b);
+    return c;
+  }
+
+  function draw(){
+    var a = PLAYERS[+selA.value], bb = PLAYERS[+selB.value];
+    var ga = goodDay(a), gb = goodDay(bb);
+    cols.innerHTML = '';
+    if(a === bb){
+      note.innerHTML = 'Pick two different players.';
+      cols.appendChild(col(a, false));
+      return;
+    }
+    var gap = (ga != null && gb != null) ? Math.abs(ga - gb) : null;
+    var clear = gap != null && gap >= 2;      // inside two points is a coin flip, not a winner
+    cols.appendChild(col(a,  clear && ga > gb));
+    cols.appendChild(col(bb, clear && gb > ga));
+
+    var lines = [];
+    if(ga != null && gb != null){
+      var hi = ga >= gb ? a : bb, lo = ga >= gb ? bb : a;
+      var diff = gap.toFixed(1);
+      lines.push(!clear
+        ? '<b>This one is close.</b> ' + (gap < 0.5
+            ? 'There is essentially nothing between them on a good day.'
+            : 'There are about ' + diff + ' points between them on a good day, which is inside the margin of a single catch.') +
+          ' Start whoever is playing the weaker defence, or whoever you would rather watch.'
+        : '<b>' + hi.name + '</b> has the higher ceiling \u2014 about ' + diff +
+          ' points more than ' + lo.name + ' on a good day.');
+    }
+    var FLEXABLE = {RB:1, WR:1, TE:1};
+    if(a.pos !== bb.pos && a.role !== 'flex' && bb.role !== 'flex' &&
+       FLEXABLE[a.pos] && FLEXABLE[bb.pos]){
+      lines.push('These two play different positions, so most weeks you are not really choosing between them \u2014 you are filling the flex.');
+    }
+    if(a.bye === bb.bye){
+      lines.push('Careful: <b>they share a bye in Week ' + a.bye + '</b>, so neither one covers the other.');
+    }
+    lines.push('This compares what each can do at his best, not a prediction for this Sunday \u2014 the opponent still matters more than anything on this screen.');
+    note.innerHTML = lines.join(' ');
+  }
+  selA.addEventListener('change', draw);
+  selB.addEventListener('change', draw);
+  draw();
+})();
+
+/* ============================================================
+   TRADE OFFERS -- take it or pass
+   ============================================================ */
+(function(){
+  var host = $('tradeQuiz');
+  if(!host) return;
+  var OFFERS = [
+    { offer:'Somebody offers you a receiver who starts every week for his team. ' +
+            'He wants <b>Jonathon Brooks</b>, your fourth running back, in return.',
+      right:'take', v:'Take it',
+      why:'This is the trade you have been holding Brooks for. You own five running ' +
+           'backs and can start three at most, and Brooks is the only one of your ' +
+           'backups who is not insurance on somebody you already own. A bench player ' +
+           'scores you nothing; a starting receiver scores you something every week. ' +
+           'That is surplus turned into points.' },
+    { offer:'Somebody offers you a good tight end. He wants <b>Brian Robinson Jr.</b>',
+      right:'pass', v:'Pass \u2014 or think much harder',
+      why:'Brian Robinson is not just a spare running back, he is the man who takes ' +
+           'over if Bijan gets hurt. Trading him does not cost you a bench spot, it ' +
+           'removes the protection on the best player you own. And you already have ' +
+           'two tight ends. Fixing a position you are fine at by selling your ' +
+           'insurance is how people lose seasons in November.' },
+    { offer:'Somebody offers you <b>two very good receivers</b> for <b>Bijan Robinson</b>.',
+      right:'pass', v:'Pass',
+      why:'Two-for-one deals almost always favour whoever ends up with the single ' +
+           'best player, because you can only start so many people \u2014 the second ' +
+           'receiver often ends up on your bench scoring zero. Bijan catches nearly ' +
+           'eighty passes a year, and in full PPR that is eighty points before anyone ' +
+           'counts a yard. If a deal makes you wonder who you would have to bench, ' +
+           'you are not being offered enough.' }
+  ];
+
+  OFFERS.forEach(function(o){
+    var item = el('div','tqi');
+    item.appendChild(el('p','offer', o.offer));
+    var btns = el('div','tq-btns');
+    var ans  = el('div','tq-ans' + (o.right === 'pass' ? ' pass' : ''));
+    ans.hidden = true;
+    ans.appendChild(el('span','v', o.v));
+    ans.appendChild(el('span', null, o.why));
+
+    [['take','Take it'],['pass','Pass']].forEach(function(pair){
+      var b = el('button','tq-btn', pair[1]);
+      b.type = 'button';
+      b.addEventListener('click', function(){
+        Array.prototype.forEach.call(btns.children, function(c){
+          c.disabled = true; c.classList.remove('sel');
+        });
+        b.classList.add('sel');
+        ans.hidden = false;
+      });
+      btns.appendChild(b);
+    });
+    item.appendChild(btns);
+    item.appendChild(ans);
+    host.appendChild(item);
+  });
+})();
+
+/* ============================================================
+   GLOSSARY
+   The jargon is the actual barrier. Every term gets underlined
+   in place the first couple of times it appears, and explains
+   itself without moving her off the paragraph she is reading.
+   Runs last, so it catches text the other blocks just rendered.
+   ============================================================ */
+(function(){
+  var GLOSSARY = {
+    'full PPR': 'Points Per Reception. Every catch a player makes is worth one point on top of his yards. It is why a running back who catches passes, like Bijan, is worth so much more than one who only runs.',
+    'PPR': 'Points Per Reception. Every catch is worth one point on top of the yards. It makes anyone who catches a lot of passes more valuable.',
+    'handcuff': 'The backup to a running back you already own. If your starter gets hurt, the handcuff usually inherits his workload \u2014 so owning him means an injury costs you far less.',
+    'flex': 'A lineup slot that will accept a running back, a receiver or a tight end. It is the spot for whoever you think will score most that week, whatever position he plays.',
+    'bye': 'The one week each NFL team does not play. A player on a bye scores exactly zero, and forgetting is the most common way people lose a week they should have won.',
+    'waiver position': 'Your place in the queue for claiming unowned players. Make a successful claim and you drop to the back of it, which is why it is worth spending carefully.',
+    'waiver priority': 'Your place in the queue for claiming unowned players. Make a successful claim and you drop to the back of it.',
+    'waivers': 'The overnight process for claiming players nobody owns. Everyone puts requests in, and they are settled by queue position rather than by who clicked first.',
+    'streaming': 'Swapping a position \u2014 almost always defence or kicker \u2014 every week to whoever has the easiest opponent, instead of holding the same one all season.',
+    'free agent': 'A player nobody owns who has already cleared waivers. In most leagues you can add him instantly without spending your waiver position.',
+    'D/ST': 'Defence and Special Teams. You start an entire team\u2019s defence as one roster spot, and it scores from sacks, interceptions, fumbles, and touchdowns rather than yards.',
+    'red zone': 'Inside the opponent\u2019s twenty-yard line. Almost all touchdowns come from here, so a player who gets the ball in the red zone scores far more fantasy points than his yardage suggests.',
+    'touches': 'Carries plus catches \u2014 the number of times a player actually gets the ball in his hands. It is the simplest measure of how involved he is.',
+    'targets': 'Passes thrown in a player\u2019s direction, whether he catches them or not. A lot of targets means his offence is deliberately looking for him.',
+    'depth chart': 'A team\u2019s internal pecking order at each position. Being first on it is what gets a player the ball.',
+    'trade deadline': 'The date after which no more trades can be made, usually around Week 11. After it, waivers are your only way to change the roster.'
+  };
+
+  var SKIP_TAG   = /^(BUTTON|SELECT|OPTION|H1|H2|H3|H4|SCRIPT|STYLE|NOSCRIPT)$/;
+  var SKIP_CLASS = ['gl','lbl','k','sec-num','eyebrow','tw-k','tw-t','byewk','bye-chip',
+                    'byehint','statline','cmp-meta','cmp-nm','cmp-u','drill-top','drill-fb',
+                    'tq-ans','offer','n','u','v','tscene-ph'];
+  var LIMIT = 2;
+  var used  = {};
+  var terms = Object.keys(GLOSSARY).sort(function(a,b){ return b.length - a.length; });
+
+  function esc(t){ return t.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&'); }
+
+  function collect(root){
+    var out = [], w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false), n;
+    while((n = w.nextNode())){
+      if(!n.nodeValue || !/[A-Za-z]/.test(n.nodeValue)) continue;
+      var bad = false, a = n.parentNode;
+      while(a && a !== root.parentNode){
+        if(a.nodeName && SKIP_TAG.test(a.nodeName)){ bad = true; break; }
+        if(a.classList){
+          for(var i=0;i<SKIP_CLASS.length;i++){
+            if(a.classList.contains(SKIP_CLASS[i])){ bad = true; break; }
+          }
+        }
+        if(bad) break;
+        a = a.parentNode;
+      }
+      if(!bad) out.push(n);
+    }
+    return out;
+  }
+
+  function wrap(node){
+    if(!node || !node.nodeValue) return;
+    for(var i=0;i<terms.length;i++){
+      var t = terms[i];
+      if((used[t] || 0) >= LIMIT) continue;
+      var re = new RegExp('(^|[^A-Za-z])(' + esc(t) + ')(?![A-Za-z])', 'i');
+      var m  = re.exec(node.nodeValue);
+      if(!m) continue;
+      var start = m.index + m[1].length;
+      var rest  = node.splitText(start);
+      var after = rest.splitText(m[2].length);
+      var b = el('button','gl');
+      b.type = 'button';
+      b.textContent = rest.nodeValue;
+      b.setAttribute('data-term', t);
+      rest.parentNode.replaceChild(b, rest);
+      used[t] = (used[t] || 0) + 1;
+      wrap(after);
+      return;
+    }
+  }
+
+  var roots = [];
+  var top = $('top'); if(top) roots.push(top);
+  var so  = document.querySelector('.signoff'); if(so) roots.push(so);
+  roots.forEach(function(r){ collect(r).forEach(wrap); });
+
+  /* ---- the definition, opened in place ---- */
+  var openBtn = null, openBox = null;
+
+  function close(){
+    if(openBox && openBox.parentNode) openBox.parentNode.removeChild(openBox);
+    if(openBtn) openBtn.classList.remove('on');
+    openBtn = null; openBox = null;
+  }
+
+  /* climb to the block this word sits in, so the panel lands under the
+     whole sentence rather than inside an inline run */
+  function blockOf(node){
+    var e = node.parentNode;
+    while(e && e !== document.body){
+      var d = getComputedStyle(e).display;
+      if(d === 'block' || d === 'flex' || d === 'list-item' || d === 'grid') return e;
+      e = e.parentNode;
+    }
+    return node.parentNode;
+  }
+
+  function open(btn){
+    var t = btn.getAttribute('data-term');
+    if(!GLOSSARY[t]) return;
+    var same = (btn === openBtn);
+    close();
+    if(same) return;                      // tapping the same word closes it
+    openBtn = btn; btn.classList.add('on');
+    openBox = el('div','gl-def');
+    openBox.appendChild(el('span','t', btn.textContent));
+    var para = document.createElement('p');
+    para.textContent = GLOSSARY[t];
+    openBox.appendChild(para);
+    var host = blockOf(btn);
+    host.parentNode.insertBefore(openBox, host.nextSibling);
+  }
+
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.gl') : null;
+    if(b){ e.preventDefault(); open(b); return; }
+    if(openBox && !openBox.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') close(); });
+})();
+
 
 })();
 </script>
